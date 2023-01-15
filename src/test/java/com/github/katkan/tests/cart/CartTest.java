@@ -38,8 +38,8 @@ public class CartTest {
         driver.findElement(addToCartButton).click();
         By productAddedAlert = By.cssSelector(".woocommerce-message");
         wait.until(ExpectedConditions.presenceOfElementLocated(productAddedAlert));
-        WebElement productAddedAlertElement = driver.findElement(productAddedAlert);
 
-        Assertions.assertTrue(productAddedAlertElement.getText().contains("został dodany do koszyka"));
+        WebElement cartButtonInAlertMessage = driver.findElement(By.cssSelector(".woocommerce-message .wc-forward"));
+        Assertions.assertTrue(cartButtonInAlertMessage.isDisplayed());
     }
 }
