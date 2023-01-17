@@ -16,6 +16,9 @@ public class CartTest {
     WebDriver driver;
     WebDriverWait wait;
 
+    By cookieConsentBar;
+
+
     @BeforeEach
     void setUp() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver1.exe");
@@ -23,8 +26,8 @@ public class CartTest {
         wait = new WebDriverWait(driver, 10);
         driver.manage().window().maximize();
         driver.navigate().to("https://fakestore.testelka.pl/");
-        By cookieConsentCBar = By.cssSelector(".woocommerce-store-notice__dismiss-link");
-        driver.findElement(cookieConsentCBar).click();
+        cookieConsentBar = By.cssSelector(".woocommerce-store-notice__dismiss-link");
+        driver.findElement(cookieConsentBar).click();
     }
 
     @AfterEach
@@ -34,7 +37,7 @@ public class CartTest {
 
     @Test
     @DisplayName("Verify adding product to cart from product page")
-    void addTripToCart() {
+    void addProductToCartFromProductPageTest() {
         driver.navigate().to("https://fakestore.testelka.pl/product/fuerteventura-sotavento/");
 
         By addToCartButton = By.cssSelector(".single_add_to_cart_button");
@@ -125,6 +128,46 @@ public class CartTest {
 
         List<WebElement> productsInCart = driver.findElements(By.cssSelector(".cart_item"));
         Assertions.assertEquals(productsAddedToCart, productsInCart.size(), "The number of items in cart is not correct");
+    }
+
+    @Test
+    @DisplayName("Verify changing product amount on the cart page")
+    void changeProductAmountInCart() {
+        driver.navigate().to("https://fakestore.testelka.pl/product/fuerteventura-sotavento/");
+
+        By addToCartButton = By.cssSelector(".single_add_to_cart_button");
+        driver.findElement(addToCartButton).click();
+
+        WebElement cartButtonInAlertMessage = driver.findElement(By.cssSelector(".woocommerce-message .wc-forward"));
+        cartButtonInAlertMessage.click();
+
+        WebElement quantityField = driver.findElement(By.cssSelector("[id^='quantity']"));
+        quantityField.clear();
+        quantityField.sendKeys("4");
+
+        driver.findElement(By.name("update_cart")).click();
+        wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(".blockUI"), 0));
+
+        WebElement orderTotalPrice = driver.findElement(By.cssSelector(".order-total strong .amount"));
+        Assertions.assertEquals("14 400,00 zł", orderTotalPrice.getText(), "Order total is not correct");
+    }
+
+    @Test
+    @DisplayName("Verify removing product on the cart page")
+    void removeProductFromCart() {
+        driver.navigate().to("https://fakestore.testelka.pl/product/fuerteventura-sotavento/");
+
+        By addToCartButton = By.cssSelector(".single_add_to_cart_button");
+        driver.findElement(addToCartButton).click();
+
+        WebElement cartButtonInAlertMessage = driver.findElement(By.cssSelector(".woocommerce-message .wc-forward"));
+        cartButtonInAlertMessage.click();
+
+        driver.findElement(By.cssSelector(".remove")).click();
+
+        wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(".blockUI"), 0));
+
+        Assertions.assertTrue(driver.findElement(By.cssSelector(".cart-empty")).isDisplayed());
     }
 
     private int addAllProductsToCart(int productsCounter) {
