@@ -9,6 +9,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
+
 public class CartTest {
 
     WebDriver driver;
@@ -62,7 +64,7 @@ public class CartTest {
 
     @Test
     @DisplayName("Verify adding minimum 10 trips to cart")
-    void add10TripsToCartTest() {
+    void addTrip10TimesToCartTest() {
         WebElement categoriesElement = driver.findElement(By.cssSelector("div.columns-3"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", categoriesElement);
         WebElement firstCategory = driver.findElement(By.xpath("//li[@class='product-category product first']"));
@@ -101,5 +103,39 @@ public class CartTest {
                 () -> Assertions.assertTrue(cartButtonInAlertMessage.isDisplayed()),
                 () -> Assertions.assertTrue(alert.getText().contains(amount))
         );
+    }
+
+    @Test
+    @DisplayName("Verify adding 10 different trips to cart")
+    void add10DifferentTripsToCartTest() {
+        WebElement categoriesElement = driver.findElement(By.cssSelector("div.columns-3"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", categoriesElement);
+        WebElement firstCategory = driver.findElement(By.xpath("//li[@class='product-category product first']"));
+        firstCategory.click();
+
+        int productsAddedToCart = 0;
+
+        productsAddedToCart = addAllProductsToCart(productsAddedToCart);
+
+        driver.findElement(By.cssSelector(".cat-item-19 a")).click();
+
+        productsAddedToCart = addAllProductsToCart(productsAddedToCart);
+
+        driver.findElement(By.cssSelector(".cart-contents")).click();
+
+        List<WebElement> productsInCart = driver.findElements(By.cssSelector(".cart_item"));
+        Assertions.assertEquals(productsAddedToCart, productsInCart.size(), "The number of items in cart is not correct");
+    }
+
+    private int addAllProductsToCart(int productsCounter) {
+        List<WebElement> categoryProducts = driver.findElements(By.cssSelector(".type-product"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", categoryProducts.get(0));
+        for (WebElement product: categoryProducts) {
+            product.findElement(By.cssSelector(".button")).click();
+            By loadingWheel = By.cssSelector(".loading");
+            wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheel, 0));
+            productsCounter++;
+        }
+        return productsCounter;
     }
 }
