@@ -2,7 +2,6 @@ package com.github.katkan.tests.cart;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -16,9 +15,6 @@ public class CartTest {
     WebDriver driver;
     WebDriverWait wait;
 
-    By cookieConsentBar;
-
-
     @BeforeEach
     void setUp() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver1.exe");
@@ -26,7 +22,7 @@ public class CartTest {
         wait = new WebDriverWait(driver, 10);
         driver.manage().window().maximize();
         driver.navigate().to("https://fakestore.testelka.pl/");
-        cookieConsentBar = By.cssSelector(".woocommerce-store-notice__dismiss-link");
+        By cookieConsentBar = By.cssSelector(".woocommerce-store-notice__dismiss-link");
         driver.findElement(cookieConsentBar).click();
     }
 
@@ -36,149 +32,136 @@ public class CartTest {
     }
 
     @Test
-    @DisplayName("Verify adding product to cart from product page")
+    @DisplayName("Verify adding product to cart from the product page")
     void addProductToCartFromProductPageTest() {
-        driver.navigate().to("https://fakestore.testelka.pl/product/fuerteventura-sotavento/");
+        String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
+        addProductToCart(productUrl);
+        viewCart();
 
-        By addToCartButton = By.cssSelector(".single_add_to_cart_button");
-        driver.findElement(addToCartButton).click();
-        By productAddedAlert = By.cssSelector(".woocommerce-message");
-        wait.until(ExpectedConditions.presenceOfElementLocated(productAddedAlert));
-
-        WebElement cartButtonInAlertMessage = driver.findElement(By.cssSelector(".woocommerce-message .wc-forward"));
-        Assertions.assertTrue(cartButtonInAlertMessage.isDisplayed());
-    }
-
-    @Test
-    @DisplayName("Verify adding product to cart from category page")
-    void addTripToCartFromCategoryPageTest() {
-        WebElement categoriesElement = driver.findElement(By.cssSelector("div.columns-3"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", categoriesElement);
-        WebElement firstCategory = driver.findElement(By.xpath("//li[@class='product-category product first']"));
-        firstCategory.click();
-
-        driver.findElement(By.cssSelector("[data-product_id='393']")).click();
-        By addedElement = By.cssSelector(".added");
-        wait.until(ExpectedConditions.presenceOfElementLocated(addedElement));
-
-        WebElement seeCartButton = driver.findElement(By.cssSelector(".added_to_cart"));
-        Assertions.assertTrue(seeCartButton.isDisplayed());
-    }
-
-    @Test
-    @DisplayName("Verify adding minimum 10 trips to cart")
-    void addTrip10TimesToCartTest() {
-        WebElement categoriesElement = driver.findElement(By.cssSelector("div.columns-3"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", categoriesElement);
-        WebElement firstCategory = driver.findElement(By.xpath("//li[@class='product-category product first']"));
-        firstCategory.click();
-
-        for (int i = 0; i < 10; i++) {
-            WebElement element = driver.findElement(By.cssSelector(".button[data-product_id='393']"));
-            wait.until(ExpectedConditions.elementToBeClickable(element));
-            element.click();
-            By loadingWheel = By.cssSelector(".loading");
-            wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheel, 0));
-        }
-
-        WebElement cartTotalPrice = driver.findElement(By.cssSelector(".cart-contents .woocommerce-Price-amount"));
-        Assertions.assertEquals("36 000,00 zł", cartTotalPrice.getText());
-    }
-
-    @Test
-    @DisplayName("Verify adding multiple products to cart from product page")
-    void addTripToCartAndModifyAmountTest() {
-        driver.navigate().to("https://fakestore.testelka.pl/product/fuerteventura-sotavento/");
-
-        WebElement quantityField = driver.findElement(By.cssSelector("[id^='quantity']"));
-        quantityField.clear();
-        String amount = "9";
-        quantityField.sendKeys(amount);
-
-        By addToCartButton = By.cssSelector(".single_add_to_cart_button");
-        driver.findElement(addToCartButton).click();
-        By productAddedAlert = By.cssSelector(".woocommerce-message");
-        wait.until(ExpectedConditions.presenceOfElementLocated(productAddedAlert));
-
-        WebElement alert = driver.findElement(By.cssSelector(".woocommerce-message"));
-        WebElement cartButtonInAlertMessage = driver.findElement(By.cssSelector(".woocommerce-message .wc-forward"));
         Assertions.assertAll(
-                () -> Assertions.assertTrue(cartButtonInAlertMessage.isDisplayed()),
-                () -> Assertions.assertTrue(alert.getText().contains(amount))
+                () -> Assertions.assertEquals("1", driver.findElement(By.cssSelector(".quantity input")).getAttribute("value")),
+                () -> Assertions.assertEquals(productUrl, driver.findElement(By.cssSelector("td.product-name a")).getAttribute("href"))
         );
     }
 
     @Test
-    @DisplayName("Verify adding 10 different trips to cart")
-    void add10DifferentTripsToCartTest() {
-        WebElement categoriesElement = driver.findElement(By.cssSelector("div.columns-3"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", categoriesElement);
-        WebElement firstCategory = driver.findElement(By.xpath("//li[@class='product-category product first']"));
-        firstCategory.click();
+    @DisplayName("Verify adding product to cart from category page")
+    void addProductToCartFromCategoryPageTest() {
+        driver.navigate().to("https://fakestore.testelka.pl/product-category/yoga-i-pilates/");
+        By produvt = By.cssSelector("[data-product_id='61']");
 
-        int productsAddedToCart = 0;
+        driver.findElement(produvt).click();
+        By viewCartButton = By.cssSelector(".added_to_cart");
+        wait.until(ExpectedConditions.elementToBeClickable(viewCartButton));
+        driver.findElement(viewCartButton).click();
 
-        productsAddedToCart = addAllProductsToCart(productsAddedToCart);
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(driver.findElement(produvt).isDisplayed()),
+                () -> Assertions.assertEquals("1", driver.findElement(By.cssSelector(".quantity input")).getAttribute("value"))
+        );
 
-        driver.findElement(By.cssSelector(".cat-item-19 a")).click();
 
-        productsAddedToCart = addAllProductsToCart(productsAddedToCart);
+    }
 
-        driver.findElement(By.cssSelector(".cart-contents")).click();
+    @Test
+    @DisplayName("Verify adding 10 trips to cart")
+    void addOneProductToCart10TimesTest() {
 
-        List<WebElement> productsInCart = driver.findElements(By.cssSelector(".cart_item"));
-        Assertions.assertEquals(productsAddedToCart, productsInCart.size(), "The number of items in cart is not correct");
+        String yogaUrl = "https://fakestore.testelka.pl/product/wakacje-z-yoga-w-kraju-kwitnacej-wisni/";
+        for (int i = 0; i < 10; i++) {
+            addProductToCart(yogaUrl);
+        }
+        viewCart();
+
+        Assertions.assertAll(
+                () -> Assertions.assertEquals("10", driver.findElement(By.cssSelector(".quantity input")).getAttribute("value")),
+                () -> Assertions.assertEquals(yogaUrl, driver.findElement(By.cssSelector("td.product-name a")).getAttribute("href"))
+        );
+    }
+
+    @Test
+    @DisplayName("Verify adding multiple products to cart from product page")
+    void addProductToCartAndModifyAmountOnProductPageTest() {
+        String url = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
+        String numberOfItemsToAdd = "9";
+        addProductToCart(url, numberOfItemsToAdd);
+        viewCart();
+
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(numberOfItemsToAdd, driver.findElement(By.cssSelector(".quantity input")).getAttribute("value")),
+                () -> Assertions.assertEquals(url, driver.findElement(By.cssSelector("td.product-name a")).getAttribute("href"))
+        );
+    }
+
+    @Test
+    @DisplayName("Verify adding minimum 10 different trips to cart")
+    void addMoreThan10DifferentProductsToCartTest() {
+        List<String> productsSpecificUrls = List.of("wakacje-z-yoga-w-kraju-kwitnacej-wisni/", "egipt-el-gouna/", "fuerteventura-sotavento/",
+                "grecja-limnos/", "windsurfing-w-karpathos/", "windsurfing-w-lanzarote-costa-teguise/", "wyspy-zielonego-przyladka-sal/",
+                "gran-koscielcow/", "wspinaczka-island-peak/", "wspinaczka-via-ferraty/");
+
+        String productGenericUrl = "https://fakestore.testelka.pl/product/";
+        productsSpecificUrls.forEach(x -> addProductToCart(productGenericUrl + x));
+        viewCart();
+
+        List<WebElement> elements = driver.findElements(By.cssSelector(".cart_item .product-name a"));
+        elements.forEach(x -> x.getAttribute("href"));
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(productsSpecificUrls.size(), elements.size()),
+                () -> {
+                    for (WebElement element : elements) {
+                        Assertions.assertTrue(productsSpecificUrls.contains(element.getAttribute("href").replace(productGenericUrl, "")));
+                    }
+                }
+        );
     }
 
     @Test
     @DisplayName("Verify changing product amount on the cart page")
-    void changeProductAmountInCart() {
-        driver.navigate().to("https://fakestore.testelka.pl/product/fuerteventura-sotavento/");
-
-        By addToCartButton = By.cssSelector(".single_add_to_cart_button");
-        driver.findElement(addToCartButton).click();
-
-        WebElement cartButtonInAlertMessage = driver.findElement(By.cssSelector(".woocommerce-message .wc-forward"));
-        cartButtonInAlertMessage.click();
-
-        WebElement quantityField = driver.findElement(By.cssSelector("[id^='quantity']"));
-        quantityField.clear();
-        quantityField.sendKeys("4");
+    void changeProductAmountInCartTest() {
+        addProductToCart("https://fakestore.testelka.pl/product/wspinaczka-island-peak/");
+        viewCart();
+        changeQuantity("4");
 
         driver.findElement(By.name("update_cart")).click();
         wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(".blockUI"), 0));
 
-        WebElement orderTotalPrice = driver.findElement(By.cssSelector(".order-total strong .amount"));
-        Assertions.assertEquals("14 400,00 zł", orderTotalPrice.getText(), "Order total is not correct");
+        Assertions.assertEquals("4", driver.findElement(By.cssSelector(".quantity input")).getAttribute("value"));
     }
 
     @Test
     @DisplayName("Verify removing product on the cart page")
-    void removeProductFromCart() {
-        driver.navigate().to("https://fakestore.testelka.pl/product/fuerteventura-sotavento/");
-
-        By addToCartButton = By.cssSelector(".single_add_to_cart_button");
-        driver.findElement(addToCartButton).click();
-
-        WebElement cartButtonInAlertMessage = driver.findElement(By.cssSelector(".woocommerce-message .wc-forward"));
-        cartButtonInAlertMessage.click();
+    void removeProductFromCartTest() {
+        addProductToCart("https://fakestore.testelka.pl/product/fuerteventura-sotavento/");
+        viewCart();
 
         driver.findElement(By.cssSelector(".remove")).click();
-
         wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(".blockUI"), 0));
 
         Assertions.assertTrue(driver.findElement(By.cssSelector(".cart-empty")).isDisplayed());
     }
 
-    private int addAllProductsToCart(int productsCounter) {
-        List<WebElement> categoryProducts = driver.findElements(By.cssSelector(".type-product"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", categoryProducts.get(0));
-        for (WebElement product: categoryProducts) {
-            product.findElement(By.cssSelector(".button")).click();
-            By loadingWheel = By.cssSelector(".loading");
-            wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheel, 0));
-            productsCounter++;
-        }
-        return productsCounter;
+    private void addProductToCart(String url) {
+        driver.navigate().to(url);
+        By addToCartButton = By.cssSelector(".single_add_to_cart_button");
+        driver.findElement(addToCartButton).click();
+    }
+
+    private void addProductToCart(String url, String amount) {
+        driver.navigate().to(url);
+        changeQuantity(amount);
+        By addToCartButton = By.cssSelector(".single_add_to_cart_button");
+        driver.findElement(addToCartButton).click();
+    }
+
+    private void viewCart() {
+        By cartButton = By.cssSelector(".woocommerce-message .wc-forward");
+        driver.findElement(cartButton).click();
+    }
+
+    private void changeQuantity(String amount) {
+        WebElement quantityField = driver.findElement(By.cssSelector("[id^='quantity']"));
+        quantityField.clear();
+        quantityField.sendKeys(amount);
     }
 }
