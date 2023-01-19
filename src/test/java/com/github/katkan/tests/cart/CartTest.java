@@ -44,8 +44,10 @@ public class CartTest {
         viewCart();
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals("1", driver.findElement(quantityField).getAttribute("value")),
-                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"))
+                () -> Assertions.assertEquals("1", driver.findElement(quantityField).getAttribute("value"),
+                        "The quantity of product is not 1"),
+                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"),
+                        "The link in the cart is not the link for Fuerteventura trip")
         );
     }
 
@@ -62,8 +64,10 @@ public class CartTest {
         driver.findElement(viewCartButton).click();
 
         Assertions.assertAll(
-                () -> Assertions.assertTrue(driver.findElement(product).isDisplayed()),
-                () -> Assertions.assertEquals("1", driver.findElement(quantityField).getAttribute("value"))
+                () -> Assertions.assertTrue(driver.findElement(product).isDisplayed(),
+                        "The product that was added is not displayed in the cart"),
+                () -> Assertions.assertEquals("1", driver.findElement(quantityField).getAttribute("value"),
+                        "The quantity of product is not 1")
         );
     }
 
@@ -78,8 +82,10 @@ public class CartTest {
         viewCart();
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals("10", driver.findElement(quantityField).getAttribute("value")),
-                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"))
+                () -> Assertions.assertEquals("10", driver.findElement(quantityField).getAttribute("value"),
+                        "The quantity of product is not 10"),
+                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"),
+                        "The link in the cart is not the link for Yoga in Japan trip")
         );
     }
 
@@ -92,8 +98,10 @@ public class CartTest {
         viewCart();
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals(numberOfItemsToAdd, driver.findElement(quantityField).getAttribute("value")),
-                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"))
+                () -> Assertions.assertEquals(numberOfItemsToAdd, driver.findElement(quantityField).getAttribute("value"),
+                        "The quantity of product is not " + numberOfItemsToAdd),
+                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"),
+                        "The link in the cart is not the link for Fuerteventura trip")
         );
     }
 
@@ -110,10 +118,12 @@ public class CartTest {
 
         List<WebElement> productLinksInCart = driver.findElements(By.cssSelector(".cart_item .product-name a"));
         Assertions.assertAll(
-                () -> Assertions.assertEquals(productsSpecificUrlParts.size(), productLinksInCart.size()),
+                () -> Assertions.assertEquals(productsSpecificUrlParts.size(), productLinksInCart.size(),
+                        "The quantity of products is not " + productsSpecificUrlParts.size()),
                 () -> {
                     for (WebElement productLinkElement : productLinksInCart) {
-                        Assertions.assertTrue(productsSpecificUrlParts.contains(productLinkElement.getAttribute("href").replace(productGenericUrlPart, "")));
+                        Assertions.assertTrue(productsSpecificUrlParts.contains(productLinkElement.getAttribute("href").replace(productGenericUrlPart, "")),
+                                "The link in the cart is unknown");
                     }
                 }
         );
@@ -132,8 +142,10 @@ public class CartTest {
         wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheel, 0));
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals(finalQuantity, driver.findElement(quantityField).getAttribute("value")),
-                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"))
+                () -> Assertions.assertEquals(finalQuantity, driver.findElement(quantityField).getAttribute("value"),
+                        "The quantity of product is not " + finalQuantity),
+                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"),
+                        "The link in the cart is not the link for Island Peak trip")
         );
     }
 
@@ -147,7 +159,8 @@ public class CartTest {
         driver.findElement(By.cssSelector(".remove")).click();
         wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheel, 0));
 
-        Assertions.assertTrue(driver.findElement(By.cssSelector(".cart-empty")).isDisplayed());
+        Assertions.assertTrue(driver.findElement(By.cssSelector(".cart-empty")).isDisplayed(),
+                "Empty cart message is not displayed");
     }
 
     private void addProductToCart(String url) {
