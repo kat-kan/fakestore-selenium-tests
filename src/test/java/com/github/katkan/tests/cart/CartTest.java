@@ -15,6 +15,11 @@ public class CartTest {
     WebDriver driver;
     WebDriverWait wait;
 
+    By quantityField = By.cssSelector(".quantity input");
+    By productLinkInCart = By.cssSelector("td.product-name a");
+    By addToCartButton = By.cssSelector(".single_add_to_cart_button");
+    By loadingWheel = By.cssSelector(".blockUI");
+
     @BeforeEach
     void setUp() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver1.exe");
@@ -39,78 +44,76 @@ public class CartTest {
         viewCart();
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals("1", driver.findElement(By.cssSelector(".quantity input")).getAttribute("value")),
-                () -> Assertions.assertEquals(productUrl, driver.findElement(By.cssSelector("td.product-name a")).getAttribute("href"))
+                () -> Assertions.assertEquals("1", driver.findElement(quantityField).getAttribute("value")),
+                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"))
         );
     }
 
     @Test
     @DisplayName("Verify adding product to cart from category page")
     void addProductToCartFromCategoryPageTest() {
-        driver.navigate().to("https://fakestore.testelka.pl/product-category/yoga-i-pilates/");
-        By produvt = By.cssSelector("[data-product_id='61']");
+        String categoryUrl = "https://fakestore.testelka.pl/product-category/yoga-i-pilates/";
+        driver.navigate().to(categoryUrl);
 
-        driver.findElement(produvt).click();
+        By product = By.cssSelector("[data-product_id='61']");
+        driver.findElement(product).click();
         By viewCartButton = By.cssSelector(".added_to_cart");
         wait.until(ExpectedConditions.elementToBeClickable(viewCartButton));
         driver.findElement(viewCartButton).click();
 
         Assertions.assertAll(
-                () -> Assertions.assertTrue(driver.findElement(produvt).isDisplayed()),
-                () -> Assertions.assertEquals("1", driver.findElement(By.cssSelector(".quantity input")).getAttribute("value"))
+                () -> Assertions.assertTrue(driver.findElement(product).isDisplayed()),
+                () -> Assertions.assertEquals("1", driver.findElement(quantityField).getAttribute("value"))
         );
-
-
     }
 
     @Test
-    @DisplayName("Verify adding 10 trips to cart")
+    @DisplayName("Verify adding one product to cart ten times")
     void addOneProductToCart10TimesTest() {
+        String productUrl = "https://fakestore.testelka.pl/product/wakacje-z-yoga-w-kraju-kwitnacej-wisni/";
 
-        String yogaUrl = "https://fakestore.testelka.pl/product/wakacje-z-yoga-w-kraju-kwitnacej-wisni/";
         for (int i = 0; i < 10; i++) {
-            addProductToCart(yogaUrl);
+            addProductToCart(productUrl);
         }
         viewCart();
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals("10", driver.findElement(By.cssSelector(".quantity input")).getAttribute("value")),
-                () -> Assertions.assertEquals(yogaUrl, driver.findElement(By.cssSelector("td.product-name a")).getAttribute("href"))
+                () -> Assertions.assertEquals("10", driver.findElement(quantityField).getAttribute("value")),
+                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"))
         );
     }
 
     @Test
     @DisplayName("Verify adding multiple products to cart from product page")
     void addProductToCartAndModifyAmountOnProductPageTest() {
-        String url = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
+        String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
         String numberOfItemsToAdd = "9";
-        addProductToCart(url, numberOfItemsToAdd);
+        addProductToCart(productUrl, numberOfItemsToAdd);
         viewCart();
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals(numberOfItemsToAdd, driver.findElement(By.cssSelector(".quantity input")).getAttribute("value")),
-                () -> Assertions.assertEquals(url, driver.findElement(By.cssSelector("td.product-name a")).getAttribute("href"))
+                () -> Assertions.assertEquals(numberOfItemsToAdd, driver.findElement(quantityField).getAttribute("value")),
+                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"))
         );
     }
 
     @Test
-    @DisplayName("Verify adding minimum 10 different trips to cart")
+    @DisplayName("Verify adding 10 different trips to cart")
     void addMoreThan10DifferentProductsToCartTest() {
-        List<String> productsSpecificUrls = List.of("wakacje-z-yoga-w-kraju-kwitnacej-wisni/", "egipt-el-gouna/", "fuerteventura-sotavento/",
+        List<String> productsSpecificUrlParts = List.of("wakacje-z-yoga-w-kraju-kwitnacej-wisni/", "egipt-el-gouna/", "fuerteventura-sotavento/",
                 "grecja-limnos/", "windsurfing-w-karpathos/", "windsurfing-w-lanzarote-costa-teguise/", "wyspy-zielonego-przyladka-sal/",
                 "gran-koscielcow/", "wspinaczka-island-peak/", "wspinaczka-via-ferraty/");
 
-        String productGenericUrl = "https://fakestore.testelka.pl/product/";
-        productsSpecificUrls.forEach(x -> addProductToCart(productGenericUrl + x));
+        String productGenericUrlPart = "https://fakestore.testelka.pl/product/";
+        productsSpecificUrlParts.forEach(x -> addProductToCart(productGenericUrlPart + x));
         viewCart();
 
-        List<WebElement> elements = driver.findElements(By.cssSelector(".cart_item .product-name a"));
-        elements.forEach(x -> x.getAttribute("href"));
+        List<WebElement> productLinksInCart = driver.findElements(By.cssSelector(".cart_item .product-name a"));
         Assertions.assertAll(
-                () -> Assertions.assertEquals(productsSpecificUrls.size(), elements.size()),
+                () -> Assertions.assertEquals(productsSpecificUrlParts.size(), productLinksInCart.size()),
                 () -> {
-                    for (WebElement element : elements) {
-                        Assertions.assertTrue(productsSpecificUrls.contains(element.getAttribute("href").replace(productGenericUrl, "")));
+                    for (WebElement productLinkElement : productLinksInCart) {
+                        Assertions.assertTrue(productsSpecificUrlParts.contains(productLinkElement.getAttribute("href").replace(productGenericUrlPart, "")));
                     }
                 }
         );
@@ -119,38 +122,42 @@ public class CartTest {
     @Test
     @DisplayName("Verify changing product amount on the cart page")
     void changeProductAmountInCartTest() {
-        addProductToCart("https://fakestore.testelka.pl/product/wspinaczka-island-peak/");
+        String productUrl = "https://fakestore.testelka.pl/product/wspinaczka-island-peak/";
+        String finalQuantity = "4";
+        addProductToCart(productUrl);
         viewCart();
-        changeQuantity("4");
+        changeQuantity(finalQuantity);
 
         driver.findElement(By.name("update_cart")).click();
-        wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(".blockUI"), 0));
+        wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheel, 0));
 
-        Assertions.assertEquals("4", driver.findElement(By.cssSelector(".quantity input")).getAttribute("value"));
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(finalQuantity, driver.findElement(quantityField).getAttribute("value")),
+                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"))
+        );
     }
 
     @Test
     @DisplayName("Verify removing product on the cart page")
     void removeProductFromCartTest() {
-        addProductToCart("https://fakestore.testelka.pl/product/fuerteventura-sotavento/");
+        String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
+        addProductToCart(productUrl);
         viewCart();
 
         driver.findElement(By.cssSelector(".remove")).click();
-        wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(".blockUI"), 0));
+        wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheel, 0));
 
         Assertions.assertTrue(driver.findElement(By.cssSelector(".cart-empty")).isDisplayed());
     }
 
     private void addProductToCart(String url) {
         driver.navigate().to(url);
-        By addToCartButton = By.cssSelector(".single_add_to_cart_button");
         driver.findElement(addToCartButton).click();
     }
 
     private void addProductToCart(String url, String amount) {
         driver.navigate().to(url);
         changeQuantity(amount);
-        By addToCartButton = By.cssSelector(".single_add_to_cart_button");
         driver.findElement(addToCartButton).click();
     }
 
