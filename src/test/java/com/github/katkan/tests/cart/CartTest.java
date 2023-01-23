@@ -1,5 +1,7 @@
 package com.github.katkan.tests.cart;
 
+import com.github.katkan.pageObjects.CartPage;
+import com.github.katkan.pageObjects.ProductPage;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -40,13 +42,11 @@ public class CartTest {
     @DisplayName("Verify adding product to cart from the product page")
     void addProductToCartFromProductPageTest() {
         String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
-        addProductToCart(productUrl);
-        viewCart();
+        CartPage cartPage = new ProductPage(driver).goTo(productUrl).addToCart().viewCart();
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals("1", driver.findElement(quantityField).getAttribute("value"),
-                        "The quantity of product is not 1"),
-                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"),
+                () -> Assertions.assertEquals(1, cartPage.getProductQuantity(), "The quantity of product is not 1"),
+                () -> Assertions.assertEquals(productUrl, cartPage.getProductLink(),
                         "The link in the cart is not the link for Fuerteventura trip")
         );
     }
