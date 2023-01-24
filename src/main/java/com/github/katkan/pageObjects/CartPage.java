@@ -21,4 +21,12 @@ public class CartPage {
     public String getProductLink() {
         return driver.findElement(productLinkInCart).getAttribute("href");
     }
+
+    public boolean isProductDisplayed(String id) {
+        return driver.findElement(getProductSelector(id)).isDisplayed();
+    }
+
+    private By getProductSelector(String id) {
+        return By.cssSelector("[data-product_id='" + id + "']");
+    }
 }

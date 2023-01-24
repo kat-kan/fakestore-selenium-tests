@@ -1,6 +1,7 @@
 package com.github.katkan.tests.cart;
 
 import com.github.katkan.pageObjects.CartPage;
+import com.github.katkan.pageObjects.CategoryPage;
 import com.github.katkan.pageObjects.ProductPage;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -54,19 +55,16 @@ public class CartTest {
     @Test
     @DisplayName("Verify adding product to cart from category page")
     void addProductToCartFromCategoryPageTest() {
-        String categoryUrl = "https://fakestore.testelka.pl/product-category/yoga-i-pilates/";
-        driver.navigate().to(categoryUrl);
+        String url = "https://fakestore.testelka.pl/product-category/yoga-i-pilates/";
+        String productId = "61";
 
-        By product = By.cssSelector("[data-product_id='61']");
-        driver.findElement(product).click();
-        By viewCartButton = By.cssSelector(".added_to_cart");
-        wait.until(ExpectedConditions.elementToBeClickable(viewCartButton));
-        driver.findElement(viewCartButton).click();
+        CategoryPage categoryPage = new CategoryPage(driver, wait);
+        CartPage cartPage = categoryPage.goTo(url).addToCart(productId).viewCart();
 
         Assertions.assertAll(
-                () -> Assertions.assertTrue(driver.findElement(product).isDisplayed(),
+                () -> Assertions.assertTrue(cartPage.isProductDisplayed(productId),
                         "The product that was added is not displayed in the cart"),
-                () -> Assertions.assertEquals("1", driver.findElement(quantityField).getAttribute("value"),
+                () -> Assertions.assertEquals(1, cartPage.getProductQuantity(),
                         "The quantity of product is not 1")
         );
     }
