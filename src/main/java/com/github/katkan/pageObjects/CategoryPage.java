@@ -10,31 +10,31 @@ public class CategoryPage {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    private By viewCartButton = By.cssSelector(".added_to_cart");
+    private By viewCartButtonLocator = By.cssSelector(".added_to_cart");
+    private String addToCartButtonLocator = "[data-product_id='<product_id>']";
 
-    public CategoryPage(WebDriver driver, WebDriverWait wait) {
+    public CategoryPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = wait;
+        this.wait = new WebDriverWait(driver, 5);
     }
 
     public CategoryPage goTo(String url) {
         driver.navigate().to(url);
-        return new CategoryPage(driver, wait);
+        return new CategoryPage(driver);
     }
 
     public CategoryPage addToCart(String id) {
         driver.findElement(getProductSelector(id)).click();
-        return new CategoryPage(driver, wait);
+        return new CategoryPage(driver);
     }
 
     public CartPage viewCart() {
-        wait.until(ExpectedConditions.elementToBeClickable(viewCartButton));
-        driver.findElement(viewCartButton).click();
+        wait.until(ExpectedConditions.elementToBeClickable(viewCartButtonLocator));
+        driver.findElement(viewCartButtonLocator).click();
         return new CartPage(driver);
     }
 
     private By getProductSelector(String id) {
-        return By.cssSelector("[data-product_id='" + id + "']");
+        return By.cssSelector(addToCartButtonLocator.replace("<product_id>", id));
     }
-
 }

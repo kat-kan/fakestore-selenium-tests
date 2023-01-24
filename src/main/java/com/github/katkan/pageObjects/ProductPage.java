@@ -2,12 +2,15 @@ package com.github.katkan.pageObjects;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class ProductPage {
     private WebDriver driver;
 
-    private By cartButton = By.cssSelector(".woocommerce-message .wc-forward");
-    private By addToCartButton = By.cssSelector(".single_add_to_cart_button");
+    private By viewCartButtonLocator = By.cssSelector(".woocommerce-message .wc-forward");
+    private By addToCartButtonLocator = By.cssSelector(".single_add_to_cart_button");
+    private By quantityFieldLocator = By.cssSelector("[id^='quantity']");
+
 
     public ProductPage(WebDriver driver) {
         this.driver = driver;
@@ -19,12 +22,24 @@ public class ProductPage {
     }
 
     public ProductPage addToCart() {
-        driver.findElement(addToCartButton).click();
+        driver.findElement(addToCartButtonLocator).click();
         return new ProductPage(driver);
     }
 
-    public CartPage viewCart(){
-        driver.findElement(cartButton).click();
+    public ProductPage addToCart(int amount) {
+        changeQuantity(amount);
+        driver.findElement(addToCartButtonLocator).click();
+        return new ProductPage(driver);
+    }
+
+    public CartPage viewCart() {
+        driver.findElement(viewCartButtonLocator).click();
         return new CartPage(driver);
+    }
+
+    private void changeQuantity(int amount) {
+        WebElement quantityField = driver.findElement(quantityFieldLocator);
+        quantityField.clear();
+        quantityField.sendKeys(String.valueOf(amount));
     }
 }
