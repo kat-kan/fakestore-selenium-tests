@@ -17,8 +17,6 @@ public class BaseTest {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver1.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.navigate().to("https://fakestore.testelka.pl/");
-        driver.findElement(cookieConsentBarLocator).click();
     }
 
     @AfterEach

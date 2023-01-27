@@ -3,16 +3,14 @@ package com.github.katkan.pageObjects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class CartPage {
-
-    private WebDriver driver;
+public class CartPage extends BasePage{
 
     private By productQuantityLocator = By.cssSelector(".quantity input");
     private By productLinkInCartLocator = By.cssSelector("td.product-name a");
     String removeProductButtonCssSelector = "[data-product_id='<product_id>']";
 
     public CartPage(WebDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     public int getProductQuantity() {

@@ -4,8 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class ProductPage {
-    private WebDriver driver;
+public class ProductPage extends BasePage {
 
     private By viewCartButtonLocator = By.cssSelector(".woocommerce-message .wc-forward");
     private By addToCartButtonLocator = By.cssSelector(".single_add_to_cart_button");
@@ -13,7 +12,7 @@ public class ProductPage {
 
 
     public ProductPage(WebDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     public ProductPage goTo(String productUrl) {

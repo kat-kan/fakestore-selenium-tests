@@ -3,19 +3,19 @@ package com.github.katkan.tests.cart;
 import com.github.katkan.pageObjects.CartPage;
 import com.github.katkan.pageObjects.CategoryPage;
 import com.github.katkan.pageObjects.ProductPage;
-import org.junit.jupiter.api.*;
+import com.github.katkan.tests.base.BaseTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public class CartTest {
+public class CartTests extends BaseTest {
 
-    WebDriver driver;
     WebDriverWait wait;
 
     By quantityField = By.cssSelector(".quantity input");
@@ -23,27 +23,13 @@ public class CartTest {
     By addToCartButton = By.cssSelector(".single_add_to_cart_button");
     By loadingWheel = By.cssSelector(".blockUI");
 
-    @BeforeEach
-    void setUp() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver1.exe");
-        driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, 10);
-        driver.manage().window().maximize();
-        driver.navigate().to("https://fakestore.testelka.pl/");
-        By cookieConsentBar = By.cssSelector(".woocommerce-store-notice__dismiss-link");
-        driver.findElement(cookieConsentBar).click();
-    }
-
-    @AfterEach
-    void tearDown() {
-        driver.quit();
-    }
-
     @Test
     @DisplayName("Verify adding product to cart from the product page")
     void addProductToCartFromProductPageTest() {
         String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
-        CartPage cartPage = new ProductPage(driver).goTo(productUrl).addToCart().viewCart();
+        ProductPage productPage = new ProductPage(driver).goTo(productUrl);
+        productPage.closeCookieConsentBar();
+        CartPage cartPage = productPage.addToCart().viewCart();
 
         Assertions.assertAll(
                 () -> Assertions.assertEquals(1, cartPage.getProductQuantity(), "The quantity of product is not 1"),
@@ -58,8 +44,9 @@ public class CartTest {
         String url = "https://fakestore.testelka.pl/product-category/yoga-i-pilates/";
         String productId = "61";
 
-        CategoryPage categoryPage = new CategoryPage(driver, wait);
-        CartPage cartPage = categoryPage.goTo(url).addToCart(productId).viewCart();
+        CategoryPage categoryPage = new CategoryPage(driver).goTo(url);
+        categoryPage.closeCookieConsentBar();
+        CartPage cartPage = categoryPage.addToCart(productId).viewCart();
 
         Assertions.assertAll(
                 () -> Assertions.assertTrue(cartPage.isProductDisplayed(productId),
@@ -74,31 +61,34 @@ public class CartTest {
     void addOneProductToCart10TimesTest() {
         String productUrl = "https://fakestore.testelka.pl/product/wakacje-z-yoga-w-kraju-kwitnacej-wisni/";
 
+        ProductPage productPage = new ProductPage(driver);
         for (int i = 0; i < 10; i++) {
-            addProductToCart(productUrl);
+            productPage.goTo(productUrl).closeCookieConsentBar();
+            productPage.addToCart();
         }
-        viewCart();
+        CartPage cartPage = productPage.viewCart();
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals("10", driver.findElement(quantityField).getAttribute("value"),
+                () -> Assertions.assertEquals(10, cartPage.getProductQuantity(),
                         "The quantity of product is not 10"),
-                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"),
+                () -> Assertions.assertEquals(productUrl, cartPage.getProductLink(),
                         "The link in the cart is not the link for Yoga in Japan trip")
         );
     }
 
     @Test
-    @DisplayName("Verify adding multiple products to cart from product page")
+    @DisplayName("Verify adding product to cart from product page multiple times")
     void addProductToCartAndModifyAmountOnProductPageTest() {
-        String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
-        String numberOfItemsToAdd = "9";
-        addProductToCart(productUrl, numberOfItemsToAdd);
-        viewCart();
+        String url = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
+        int numberOfItems = 9;
+        ProductPage productPage = new ProductPage(driver).goTo(url);
+        productPage.closeCookieConsentBar();
+        CartPage cartPage = productPage.addToCart(numberOfItems).viewCart();
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals(numberOfItemsToAdd, driver.findElement(quantityField).getAttribute("value"),
-                        "The quantity of product is not " + numberOfItemsToAdd),
-                () -> Assertions.assertEquals(productUrl, driver.findElement(productLinkInCart).getAttribute("href"),
+                () -> Assertions.assertEquals(numberOfItems, cartPage.getProductQuantity(),
+                        "The quantity of product is not " + numberOfItems),
+                () -> Assertions.assertEquals(url,cartPage.getProductLink(),
                         "The link in the cart is not the link for Fuerteventura trip")
         );
     }
@@ -163,12 +153,6 @@ public class CartTest {
 
     private void addProductToCart(String url) {
         driver.navigate().to(url);
-        driver.findElement(addToCartButton).click();
-    }
-
-    private void addProductToCart(String url, String amount) {
-        driver.navigate().to(url);
-        changeQuantity(amount);
         driver.findElement(addToCartButton).click();
     }
 
