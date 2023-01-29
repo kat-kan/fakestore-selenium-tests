@@ -5,7 +5,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class CategoryPage extends BasePage{
+public class CategoryPage extends BasePage {
+
+    public FooterPage footer;
 
     private WebDriverWait wait;
 
@@ -15,6 +17,7 @@ public class CategoryPage extends BasePage{
     public CategoryPage(WebDriver driver) {
         super(driver);
         this.wait = new WebDriverWait(driver, 5);
+        footer = new FooterPage(driver);
     }
 
     public CategoryPage goTo(String url) {

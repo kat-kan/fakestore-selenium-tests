@@ -7,6 +7,8 @@ import org.openqa.selenium.WebElement;
 public class ProductPage extends BasePage {
 
     public HeaderPage header;
+    public FooterPage footer;
+
     private By viewCartButtonLocator = By.cssSelector(".woocommerce-message .wc-forward");
     private By addToCartButtonLocator = By.cssSelector(".single_add_to_cart_button");
     private By quantityFieldLocator = By.cssSelector("[id^='quantity']");
@@ -15,6 +17,7 @@ public class ProductPage extends BasePage {
     public ProductPage(WebDriver driver) {
         super(driver);
         header = new HeaderPage(driver);
+        footer = new FooterPage(driver);
     }
 
     public ProductPage goTo(String productUrl) {

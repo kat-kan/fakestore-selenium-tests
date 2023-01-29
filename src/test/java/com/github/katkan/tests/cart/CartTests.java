@@ -32,7 +32,7 @@ public class CartTests extends BaseTest {
     void addProductToCartFromProductPageTest() {
         String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
         ProductPage productPage = new ProductPage(driver).goTo(productUrl);
-        productPage.closeCookieConsentBar();
+        productPage.footer.closeCookieConsentBar();
         CartPage cartPage = productPage.addToCart().viewCart();
 
         Assertions.assertAll(
@@ -49,7 +49,7 @@ public class CartTests extends BaseTest {
         String productId = "61";
 
         CategoryPage categoryPage = new CategoryPage(driver).goTo(url);
-        categoryPage.closeCookieConsentBar();
+        categoryPage.footer.closeCookieConsentBar();
         CartPage cartPage = categoryPage.addToCart(productId).viewCart();
 
         Assertions.assertAll(
@@ -67,7 +67,7 @@ public class CartTests extends BaseTest {
 
         ProductPage productPage = new ProductPage(driver);
         for (int i = 0; i < 10; i++) {
-            productPage.goTo(productUrl).closeCookieConsentBar();
+            productPage.goTo(productUrl).footer.closeCookieConsentBar();
             productPage.addToCart();
         }
         CartPage cartPage = productPage.viewCart();
@@ -86,7 +86,7 @@ public class CartTests extends BaseTest {
         String url = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
         int numberOfItems = 9;
         ProductPage productPage = new ProductPage(driver).goTo(url);
-        productPage.closeCookieConsentBar();
+        productPage.footer.closeCookieConsentBar();
         CartPage cartPage = productPage.addToCart(numberOfItems).viewCart();
 
         Assertions.assertAll(
