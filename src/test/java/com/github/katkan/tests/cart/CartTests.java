@@ -92,7 +92,7 @@ public class CartTests extends BaseTest {
         Assertions.assertAll(
                 () -> Assertions.assertEquals(numberOfItems, cartPage.getProductQuantity(),
                         "The quantity of product is not " + numberOfItems),
-                () -> Assertions.assertEquals(url,cartPage.getProductLink(),
+                () -> Assertions.assertEquals(url, cartPage.getProductLink(),
                         "The link in the cart is not the link for Fuerteventura trip")
         );
     }
@@ -105,19 +105,17 @@ public class CartTests extends BaseTest {
         productPages.forEach(product -> productPage.goTo(productGenericUrlPart + product).addToCart());
         CartPage cartPage = productPage.header.viewCart();
 
-//        List<WebElement> allProductsLinks = cartPage.getAllProductsLinks();
+        List<WebElement> allProductsLinks = cartPage.getAllProductsLinks();
 
         Assertions.assertAll(
                 () -> Assertions.assertEquals(productPages.size(), cartPage.getNumberOfProducts(),
-                        "The number of products is not " + productPages.size()));
-        //TODO fix this assertion
-                /*() -> Assertions.assertTrue(productPages.forEach(productLink -> allProductsLinks.contains(productPage)););
-                *//*() -> {
-                    for (WebElement productLinkElement : productLinksInCart) {
-                        Assertions.assertTrue(products.contains(productLinkElement.getAttribute("href").replace(productGenericUrlPart, "")),
-                                "The link in the cart is unknown");
-                    }
-                }*/
+                        "The number of products is not " + productPages.size()),
+                () -> allProductsLinks.stream()
+                        .map(productLinkElement -> productLinkElement.getAttribute("href"))
+                        .map(productLink -> productLink.replace(productGenericUrlPart, ""))
+                        .forEach(productLinkElement -> Assertions.assertTrue(productPages.contains(productLinkElement),
+                                "List of products that were added does not contain " + productLinkElement))
+        );
     }
 
     @Test
