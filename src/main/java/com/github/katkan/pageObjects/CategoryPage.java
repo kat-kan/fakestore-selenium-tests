@@ -8,7 +8,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class CategoryPage extends BasePage {
 
     public FooterPage footer;
-
     private WebDriverWait wait;
 
     private By viewCartButtonLocator = By.cssSelector(".added_to_cart");
