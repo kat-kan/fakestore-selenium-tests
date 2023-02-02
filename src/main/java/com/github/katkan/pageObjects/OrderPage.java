@@ -16,6 +16,11 @@ public class OrderPage extends BasePage {
     private By cityFieldLocator = By.cssSelector("#billing_city");
     private By phoneNumberFieldLocator = By.cssSelector("#billing_phone");
     private By emailFieldLocator = By.cssSelector("#billing_email");
+    private By cardNumberLocator = By.cssSelector(".InputElement[name='cardnumber']");
+    private By cardExpiryDateLocator = By.cssSelector("[name='exp-date']");
+    private By cardCvcLocator = By.cssSelector("[name='cvc']");
+    private By termsCheckboxLocator = By.cssSelector("#terms");
+    private By placeOrderButtonLocator = By.cssSelector("#place_order");
 
     public OrderPage(WebDriver driver) {
         super(driver);
@@ -24,5 +29,14 @@ public class OrderPage extends BasePage {
     public OrderPage goTo(String url) {
         driver.navigate().to(url);
         return new OrderPage(driver);
+    }
+
+    public OrderPage fillOrderData() {
+        //TODO implement method
+        return new OrderPage(driver);
+    }
+
+    public void fillPaymentData() {
+        //TODO implement method
     }
 }
