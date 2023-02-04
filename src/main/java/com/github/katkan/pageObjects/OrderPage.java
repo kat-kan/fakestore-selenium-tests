@@ -5,8 +5,6 @@ import org.openqa.selenium.WebDriver;
 
 public class OrderPage extends BasePage {
 
-    private WebDriver driver;
-
     private By firstNameFieldLocator = By.cssSelector("#billing_first_name");
     private By lastNameFieldLocator = By.cssSelector("#billing_last_name");
     private By companyFieldLocator = By.cssSelector("#billing_company");
@@ -21,6 +19,9 @@ public class OrderPage extends BasePage {
     private By cardCvcLocator = By.cssSelector("[name='cvc']");
     private By termsCheckboxLocator = By.cssSelector("#terms");
     private By placeOrderButtonLocator = By.cssSelector("#place_order");
+    private By showLoginButtonLocator = By.cssSelector(".showlogin");
+    private By loginFieldLocator = By.cssSelector("#username");
+    private By passwordFieldLocator = By.cssSelector("#password");
 
     public OrderPage(WebDriver driver) {
         super(driver);
