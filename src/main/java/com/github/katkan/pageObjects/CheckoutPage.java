@@ -3,7 +3,7 @@ package com.github.katkan.pageObjects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class OrderPage extends BasePage {
+public class CheckoutPage extends BasePage {
 
     private By firstNameFieldLocator = By.cssSelector("#billing_first_name");
     private By lastNameFieldLocator = By.cssSelector("#billing_last_name");
@@ -23,21 +23,33 @@ public class OrderPage extends BasePage {
     private By loginFieldLocator = By.cssSelector("#username");
     private By passwordFieldLocator = By.cssSelector("#password");
 
-    public OrderPage(WebDriver driver) {
+    public CheckoutPage(WebDriver driver) {
         super(driver);
     }
 
-    public OrderPage goTo(String url) {
+    public CheckoutPage goTo(String url) {
         driver.navigate().to(url);
-        return new OrderPage(driver);
+        return new CheckoutPage(driver);
     }
 
-    public OrderPage fillOrderData() {
+    public CheckoutPage fillOrderData() {
         //TODO implement method
-        return new OrderPage(driver);
+        return new CheckoutPage(driver);
     }
 
-    public void fillPaymentData() {
+    public CheckoutPage fillPaymentData() {
         //TODO implement method
+        return new CheckoutPage(driver);
     }
+
+    public CheckoutPage login(){
+        //TODO implement method
+        return new CheckoutPage(driver);
+    }
+
+    public CheckoutPage acceptTermsAndConditions(){
+        //TODO implement method
+        return new CheckoutPage(driver);
+    }
+
 }
