@@ -22,6 +22,7 @@ public class CheckoutPage extends BasePage {
     private By showLoginButtonLocator = By.cssSelector(".showlogin");
     private By loginFieldLocator = By.cssSelector("#username");
     private By passwordFieldLocator = By.cssSelector("#password");
+    private By loadingWheelLocator = By.cssSelector(".blockUI");
 
     public CheckoutPage(WebDriver driver) {
         super(driver);
@@ -52,4 +53,7 @@ public class CheckoutPage extends BasePage {
         return new CheckoutPage(driver);
     }
 
+    public void confirm() {
+        //TODO implement method
+    }
 }

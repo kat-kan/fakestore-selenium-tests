@@ -14,6 +14,6 @@ public class CheckoutTests extends BaseTest {
         String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
         ProductPage productPage = new ProductPage(driver);
         CheckoutPage checkoutPage = productPage.goTo(productUrl).addToCart().viewCart().goToCheckout();
-        checkoutPage.fillOrderData().fillPaymentData().acceptTermsAndConditions();
+        checkoutPage.fillOrderData().fillPaymentData().acceptTermsAndConditions().confirm();
     }
 }
