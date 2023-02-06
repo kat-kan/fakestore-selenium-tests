@@ -66,9 +66,9 @@ public class CartPage extends BasePage {
         return driver.findElement(cartEmptyMessageLocator).isDisplayed();
     }
 
-    public OrderPage goToCheckout(){
+    public CheckoutPage goToCheckout(){
         driver.findElement(checkoutButtonLocator);
-        return new OrderPage(driver);
+        return new CheckoutPage(driver);
     }
     private By getProductSelector(String id) {
         return By.cssSelector(removeProductButtonCssSelector.replace("<product_id>", id));
