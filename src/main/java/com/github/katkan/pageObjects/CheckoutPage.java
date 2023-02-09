@@ -2,8 +2,12 @@ package com.github.katkan.pageObjects;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class CheckoutPage extends BasePage {
+
+    private WebDriverWait wait;
 
     private By firstNameFieldLocator = By.cssSelector("#billing_first_name");
     private By lastNameFieldLocator = By.cssSelector("#billing_last_name");
@@ -25,68 +29,70 @@ public class CheckoutPage extends BasePage {
 
     public CheckoutPage(WebDriver driver) {
         super(driver);
+        wait = new WebDriverWait(driver, 7);
     }
 
-    public CheckoutPage goTo(String url) {
-        driver.navigate().to(url);
-        return new CheckoutPage(driver);
-    }
-
-    public CheckoutPage fillOrderData() {
-        //TODO implement method
-        return new CheckoutPage(driver);
-    }
-
-    public CheckoutPage addFirstName(String firstName){
+    public CheckoutPage fillFirstNameField(String firstName){
         //TODO check if for logged in user clear is needed
+        wait.until(ExpectedConditions.presenceOfElementLocated(firstNameFieldLocator));
         driver.findElement(firstNameFieldLocator).sendKeys(firstName);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage addLastName(String lastName){
+    public CheckoutPage fillLastNameField(String lastName){
         //TODO check if for logged in user clear is needed
         driver.findElement(lastNameFieldLocator).sendKeys(lastName);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage addCountry(String country){
+    public CheckoutPage fillCountryField(String country){
         //TODO check if for logged in user clear is needed
         driver.findElement(countryFieldLocator).sendKeys(country);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage addAddress(String address){
+    public CheckoutPage fillAddressField(String address){
         //TODO check if for logged in user clear is needed
         driver.findElement(addressFieldLocator).sendKeys(address);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage addPostcode(String postcode){
+    public CheckoutPage fillPostcodeField(String postcode){
         //TODO check if for logged in user clear is needed
         driver.findElement(postcodeFieldLocator).sendKeys(postcode);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage addCity(String city){
+    public CheckoutPage fillCityField(String city){
         //TODO check if for logged in user clear is needed
         driver.findElement(cityFieldLocator).sendKeys(city);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage addEmail(String email){
+    public CheckoutPage fillEmailField(String email){
         //TODO check if for logged in user clear is needed
         driver.findElement(emailFieldLocator).sendKeys(email);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage addPhone(String phone){
+    public CheckoutPage fillPhoneField(String phone){
         //TODO check if for logged in user clear is needed
         driver.findElement(phoneNumberFieldLocator).sendKeys(phone);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage fillPaymentData() {
-        //TODO implement method
+    public CheckoutPage fillCardNumberField(String cardNumber){
+        driver.findElement(cardNumberLocator).sendKeys(cardNumber);
+        return new CheckoutPage(driver);
+    }
+
+    public CheckoutPage fillCardExpiryDateField(String cardExpiryDate){
+        driver.findElement(cardExpiryDateLocator).sendKeys(cardExpiryDate);
+        return new CheckoutPage(driver);
+    }
+
+    public CheckoutPage fillCardCvcField(String cardCvc){
+        driver.findElement(cardCvcLocator).sendKeys(cardCvc);
         return new CheckoutPage(driver);
     }
 
@@ -97,10 +103,13 @@ public class CheckoutPage extends BasePage {
 
     public CheckoutPage acceptTermsAndConditions(){
         //TODO implement method
+        driver.findElement(termsCheckboxLocator).click();
         return new CheckoutPage(driver);
     }
 
-    public void confirm() {
+    public OrderReceivedPage confirm() {
         //TODO implement method
+        driver.findElement(placeOrderButtonLocator).click();
+        return new OrderReceivedPage(driver);
     }
 }
