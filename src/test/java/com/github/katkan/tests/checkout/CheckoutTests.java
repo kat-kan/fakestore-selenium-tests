@@ -12,7 +12,7 @@ public class CheckoutTests extends BaseTest {
 
     String firstName = "Joanna";
     String lastName = "Testowa";
-    String country = "Poland";
+    String country = "Polska";
     String address = "ul. Wrocławska 25";
     String postcode = "00-001";
     String city = "Warsaw";

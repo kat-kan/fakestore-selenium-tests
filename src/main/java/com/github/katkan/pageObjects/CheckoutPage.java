@@ -2,7 +2,9 @@ package com.github.katkan.pageObjects;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class CheckoutPage extends BasePage {
@@ -47,7 +49,9 @@ public class CheckoutPage extends BasePage {
 
     public CheckoutPage fillCountryField(String country){
         //TODO check if for logged in user clear is needed
-        driver.findElement(countryFieldLocator).sendKeys(country);
+        WebElement selectElement = driver.findElement(countryFieldLocator);
+        Select select = new Select(selectElement);
+        select.selectByVisibleText(country);
         return new CheckoutPage(driver);
     }
 
@@ -82,6 +86,9 @@ public class CheckoutPage extends BasePage {
     }
 
     public CheckoutPage fillCardNumberField(String cardNumber){
+        WebElement stripeFrameElement = driver.findElement(By.cssSelector("#stripe-card-element iframe"));
+        driver.switchTo().frame(stripeFrameElement);
+        //TODO fix other methods and switch to parentFrame after
         driver.findElement(cardNumberLocator).sendKeys(cardNumber);
         return new CheckoutPage(driver);
     }

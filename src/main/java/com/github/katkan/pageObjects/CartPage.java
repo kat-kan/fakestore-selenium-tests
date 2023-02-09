@@ -1,6 +1,7 @@
 package com.github.katkan.pageObjects;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -67,7 +68,7 @@ public class CartPage extends BasePage {
     }
 
     public CheckoutPage goToCheckout(){
-        driver.findElement(checkoutButtonLocator);
+        driver.findElement(checkoutButtonLocator).click();
         return new CheckoutPage(driver);
     }
     private By getProductSelector(String id) {
