@@ -28,6 +28,7 @@ public class CheckoutPage extends BasePage {
     private By loginFieldLocator = By.cssSelector("#username");
     private By passwordFieldLocator = By.cssSelector("#password");
     private By loadingWheelLocator = By.cssSelector(".blockUI");
+    private By stripeFrameLocator = By.cssSelector("#stripe-card-element iframe");
 
     public CheckoutPage(WebDriver driver) {
         super(driver);
@@ -86,19 +87,24 @@ public class CheckoutPage extends BasePage {
     }
 
     public CheckoutPage fillCardNumberField(String cardNumber){
-        WebElement stripeFrameElement = driver.findElement(By.cssSelector("#stripe-card-element iframe"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(stripeFrameLocator));
+        WebElement stripeFrameElement = driver.findElement(stripeFrameLocator);
         driver.switchTo().frame(stripeFrameElement);
-        //TODO fix other methods and switch to parentFrame after
         driver.findElement(cardNumberLocator).sendKeys(cardNumber);
+        driver.switchTo().parentFrame();
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillCardExpiryDateField(String cardExpiryDate){
+        WebElement stripeFrameElement = driver.findElement(By.cssSelector("#stripe-card-element iframe"));
+        driver.switchTo().frame(stripeFrameElement);
         driver.findElement(cardExpiryDateLocator).sendKeys(cardExpiryDate);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillCardCvcField(String cardCvc){
+        WebElement stripeFrameElement = driver.findElement(By.cssSelector("#stripe-card-element iframe"));
+        driver.switchTo().frame(stripeFrameElement);
         driver.findElement(cardCvcLocator).sendKeys(cardCvc);
         return new CheckoutPage(driver);
     }
@@ -109,7 +115,6 @@ public class CheckoutPage extends BasePage {
     }
 
     public CheckoutPage acceptTermsAndConditions(){
-        //TODO implement method
         driver.findElement(termsCheckboxLocator).click();
         return new CheckoutPage(driver);
     }
