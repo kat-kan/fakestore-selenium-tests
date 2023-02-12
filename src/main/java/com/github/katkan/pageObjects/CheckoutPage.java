@@ -29,6 +29,8 @@ public class CheckoutPage extends BasePage {
     private By passwordFieldLocator = By.cssSelector("#password");
     private By loadingWheelLocator = By.cssSelector(".blockUI");
     private By stripeFrameLocator = By.cssSelector("#stripe-card-element iframe");
+    private By stripeCvcFrameLocator = By.cssSelector("#stripe-cvc-element iframe");
+    private By stripeExpiryDateFrameLocator = By.cssSelector("#stripe-exp-element iframe");
 
     public CheckoutPage(WebDriver driver) {
         super(driver);
@@ -96,16 +98,22 @@ public class CheckoutPage extends BasePage {
     }
 
     public CheckoutPage fillCardExpiryDateField(String cardExpiryDate){
-        WebElement stripeFrameElement = driver.findElement(By.cssSelector("#stripe-card-element iframe"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(stripeExpiryDateFrameLocator));
+        WebElement stripeFrameElement = driver.findElement(stripeExpiryDateFrameLocator);
         driver.switchTo().frame(stripeFrameElement);
+        wait.until(ExpectedConditions.presenceOfElementLocated(cardExpiryDateLocator));
         driver.findElement(cardExpiryDateLocator).sendKeys(cardExpiryDate);
+        driver.switchTo().parentFrame();
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillCardCvcField(String cardCvc){
-        WebElement stripeFrameElement = driver.findElement(By.cssSelector("#stripe-card-element iframe"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(stripeCvcFrameLocator));
+        WebElement stripeFrameElement = driver.findElement(stripeCvcFrameLocator);
         driver.switchTo().frame(stripeFrameElement);
+        wait.until(ExpectedConditions.presenceOfElementLocated(cardCvcLocator));
         driver.findElement(cardCvcLocator).sendKeys(cardCvc);
+        driver.switchTo().parentFrame();
         return new CheckoutPage(driver);
     }
 
@@ -122,6 +130,7 @@ public class CheckoutPage extends BasePage {
     public OrderReceivedPage confirm() {
         //TODO implement method
         driver.findElement(placeOrderButtonLocator).click();
+        wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
         return new OrderReceivedPage(driver);
     }
 }
