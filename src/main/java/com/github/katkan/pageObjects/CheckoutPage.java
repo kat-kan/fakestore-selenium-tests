@@ -34,24 +34,24 @@ public class CheckoutPage extends BasePage {
 
     public CheckoutPage(WebDriver driver) {
         super(driver);
-        wait = new WebDriverWait(driver, 7);
+        wait = new WebDriverWait(driver, 10);
     }
 
     public CheckoutPage fillFirstNameField(String firstName){
-        //TODO check if for logged in user clear is needed
+        //TODO check if for logged in user clear is needed.is wait needed?
         wait.until(ExpectedConditions.presenceOfElementLocated(firstNameFieldLocator));
         driver.findElement(firstNameFieldLocator).sendKeys(firstName);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillLastNameField(String lastName){
-        //TODO check if for logged in user clear is needed
+        //TODO check if for logged in user clear is needed.is wait needed?
         driver.findElement(lastNameFieldLocator).sendKeys(lastName);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillCountryField(String country){
-        //TODO check if for logged in user clear is needed
+        //TODO check if for logged in user clear is needed.is wait needed?
         WebElement selectElement = driver.findElement(countryFieldLocator);
         Select select = new Select(selectElement);
         select.selectByVisibleText(country);
@@ -59,31 +59,31 @@ public class CheckoutPage extends BasePage {
     }
 
     public CheckoutPage fillAddressField(String address){
-        //TODO check if for logged in user clear is needed
+        //TODO check if for logged in user clear is needed.is wait needed?
         driver.findElement(addressFieldLocator).sendKeys(address);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillPostcodeField(String postcode){
-        //TODO check if for logged in user clear is needed
+        //TODO check if for logged in user clear is needed.is wait needed?
         driver.findElement(postcodeFieldLocator).sendKeys(postcode);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillCityField(String city){
-        //TODO check if for logged in user clear is needed
+        //TODO check if for logged in user clear is needed.is wait needed?
         driver.findElement(cityFieldLocator).sendKeys(city);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillEmailField(String email){
-        //TODO check if for logged in user clear is needed
+        //TODO check if for logged in user clear is needed.is wait needed?
         driver.findElement(emailFieldLocator).sendKeys(email);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillPhoneField(String phone){
-        //TODO check if for logged in user clear is needed
+        //TODO check if for logged in user clear is needed.is wait needed?
         driver.findElement(phoneNumberFieldLocator).sendKeys(phone);
         return new CheckoutPage(driver);
     }
@@ -101,7 +101,6 @@ public class CheckoutPage extends BasePage {
         wait.until(ExpectedConditions.presenceOfElementLocated(stripeExpiryDateFrameLocator));
         WebElement stripeFrameElement = driver.findElement(stripeExpiryDateFrameLocator);
         driver.switchTo().frame(stripeFrameElement);
-        wait.until(ExpectedConditions.presenceOfElementLocated(cardExpiryDateLocator));
         driver.findElement(cardExpiryDateLocator).sendKeys(cardExpiryDate);
         driver.switchTo().parentFrame();
         return new CheckoutPage(driver);
@@ -111,7 +110,6 @@ public class CheckoutPage extends BasePage {
         wait.until(ExpectedConditions.presenceOfElementLocated(stripeCvcFrameLocator));
         WebElement stripeFrameElement = driver.findElement(stripeCvcFrameLocator);
         driver.switchTo().frame(stripeFrameElement);
-        wait.until(ExpectedConditions.presenceOfElementLocated(cardCvcLocator));
         driver.findElement(cardCvcLocator).sendKeys(cardCvc);
         driver.switchTo().parentFrame();
         return new CheckoutPage(driver);
@@ -128,7 +126,6 @@ public class CheckoutPage extends BasePage {
     }
 
     public OrderReceivedPage confirm() {
-        //TODO implement method
         driver.findElement(placeOrderButtonLocator).click();
         wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
         return new OrderReceivedPage(driver);

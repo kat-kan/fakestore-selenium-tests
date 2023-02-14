@@ -28,8 +28,9 @@ public class CheckoutTests extends BaseTest {
         String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
         ProductPage productPage = new ProductPage(driver);
         productPage.goTo(productUrl).footer.closeCookieConsentBar();
+
         CheckoutPage checkoutPage = productPage.addToCart().viewCart().goToCheckout();
-        //TODO scroll to button checout
+
         OrderReceivedPage orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
                 .fillLastNameField(lastName)
                 .fillCountryField(country)
@@ -46,4 +47,5 @@ public class CheckoutTests extends BaseTest {
 
         Assertions.assertTrue(orderReceivedPage.isOrderSuccessfullyFinished());
     }
+    
 }
