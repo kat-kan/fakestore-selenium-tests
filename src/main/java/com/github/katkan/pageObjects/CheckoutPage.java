@@ -27,6 +27,7 @@ public class CheckoutPage extends BasePage {
     private By showLoginButtonLocator = By.cssSelector(".showlogin");
     private By loginFieldLocator = By.cssSelector("#username");
     private By passwordFieldLocator = By.cssSelector("#password");
+    private By loginButtonLocator = By.cssSelector("[name='login']");
     private By loadingWheelLocator = By.cssSelector(".blockUI");
     private By stripeFrameLocator = By.cssSelector("#stripe-card-element iframe");
     private By stripeCvcFrameLocator = By.cssSelector("#stripe-cvc-element iframe");
@@ -116,7 +117,12 @@ public class CheckoutPage extends BasePage {
     }
 
     public CheckoutPage login(){
-        //TODO implement method
+        driver.findElement(showLoginButtonLocator).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(loginFieldLocator));
+        driver.findElement(loginFieldLocator).sendKeys("login");
+        driver.findElement(passwordFieldLocator).sendKeys("pass");
+        driver.findElement(loginButtonLocator).click();
+        wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
         return new CheckoutPage(driver);
     }
 
