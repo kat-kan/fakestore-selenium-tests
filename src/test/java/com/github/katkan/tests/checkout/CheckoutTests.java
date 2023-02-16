@@ -45,7 +45,7 @@ public class CheckoutTests extends BaseTest {
                 .acceptTermsAndConditions()
                 .confirm();
 
-        Assertions.assertTrue(orderReceivedPage.isOrderSuccessfullyFinished());
+        Assertions.assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
+                "Order confirmation is not displayed");
     }
-    
 }
