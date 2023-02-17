@@ -48,4 +48,20 @@ public class CheckoutTests extends BaseTest {
         Assertions.assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
                 "Order confirmation is not displayed");
     }
+
+    @Test
+    @DisplayName("Check that user can login to existing account during order process and finish the order")
+    void orderAfterLoggingInOnExistingAccountTest() {
+        String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
+        ProductPage productPage = new ProductPage(driver);
+        productPage.goTo(productUrl).footer.closeCookieConsentBar();
+
+        CheckoutPage checkoutPage = productPage.addToCart().viewCart().goToCheckout();
+
+        checkoutPage.login();
+
+        checkoutPage.fillFirstNameField(firstName)
+                .fillLastNameField(lastName);
+
+    }
 }
