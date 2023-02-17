@@ -39,9 +39,11 @@ public class CheckoutPage extends BasePage {
     }
 
     public CheckoutPage fillFirstNameField(String firstName){
-        //TODO check if for logged in user clear is needed.is wait needed?
         wait.until(ExpectedConditions.presenceOfElementLocated(firstNameFieldLocator));
-        driver.findElement(firstNameFieldLocator).sendKeys(firstName);
+        WebElement inputField = driver.findElement(firstNameFieldLocator);
+        if (inputField.getAttribute("value").isBlank()){
+            inputField.sendKeys(firstName);
+        }
         return new CheckoutPage(driver);
     }
 
@@ -119,8 +121,8 @@ public class CheckoutPage extends BasePage {
     public CheckoutPage login(){
         driver.findElement(showLoginButtonLocator).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(loginFieldLocator));
-        driver.findElement(loginFieldLocator).sendKeys("login");
-        driver.findElement(passwordFieldLocator).sendKeys("pass");
+        driver.findElement(loginFieldLocator).sendKeys("jessie.amelia.j@gmail.com");
+        driver.findElement(passwordFieldLocator).sendKeys("23kx3acRhd5d4GK");
         driver.findElement(loginButtonLocator).click();
         wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
         return new CheckoutPage(driver);
