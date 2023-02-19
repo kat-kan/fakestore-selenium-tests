@@ -48,8 +48,11 @@ public class CheckoutPage extends BasePage {
     }
 
     public CheckoutPage fillLastNameField(String lastName){
-        //TODO check if for logged in user clear is needed.is wait needed?
-        driver.findElement(lastNameFieldLocator).sendKeys(lastName);
+        wait.until(ExpectedConditions.presenceOfElementLocated(lastNameFieldLocator));
+        WebElement inputField = driver.findElement(lastNameFieldLocator);
+        if (inputField.getAttribute("value").isBlank()){
+            inputField.sendKeys(lastName);
+        }
         return new CheckoutPage(driver);
     }
 
