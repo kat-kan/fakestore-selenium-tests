@@ -65,8 +65,11 @@ public class CheckoutPage extends BasePage {
     }
 
     public CheckoutPage fillAddressField(String address){
-        //TODO check if for logged in user clear is needed.is wait needed?
-        driver.findElement(addressFieldLocator).sendKeys(address);
+        wait.until(ExpectedConditions.presenceOfElementLocated(addressFieldLocator));
+        WebElement inputField = driver.findElement(addressFieldLocator);
+        if (inputField.getAttribute("value").isBlank()){
+            inputField.sendKeys(address);
+        }
         return new CheckoutPage(driver);
     }
 
