@@ -40,24 +40,17 @@ public class CheckoutPage extends BasePage {
 
     public CheckoutPage fillFirstNameField(String firstName){
         wait.until(ExpectedConditions.presenceOfElementLocated(firstNameFieldLocator));
-        WebElement inputField = driver.findElement(firstNameFieldLocator);
-        if (inputField.getAttribute("value").isBlank()){
-            inputField.sendKeys(firstName);
-        }
+        provideFieldInputOrKeepExistingOne(firstNameFieldLocator, firstName);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillLastNameField(String lastName){
         wait.until(ExpectedConditions.presenceOfElementLocated(lastNameFieldLocator));
-        WebElement inputField = driver.findElement(lastNameFieldLocator);
-        if (inputField.getAttribute("value").isBlank()){
-            inputField.sendKeys(lastName);
-        }
+        provideFieldInputOrKeepExistingOne(lastNameFieldLocator, lastName);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillCountryField(String country){
-        //TODO check if for logged in user clear is needed.is wait needed?
         WebElement selectElement = driver.findElement(countryFieldLocator);
         Select select = new Select(selectElement);
         select.selectByVisibleText(country);
@@ -65,35 +58,27 @@ public class CheckoutPage extends BasePage {
     }
 
     public CheckoutPage fillAddressField(String address){
-        wait.until(ExpectedConditions.presenceOfElementLocated(addressFieldLocator));
-        WebElement inputField = driver.findElement(addressFieldLocator);
-        if (inputField.getAttribute("value").isBlank()){
-            inputField.sendKeys(address);
-        }
+        provideFieldInputOrKeepExistingOne(addressFieldLocator, address);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillPostcodeField(String postcode){
-        //TODO check if for logged in user clear is needed.is wait needed?
-        driver.findElement(postcodeFieldLocator).sendKeys(postcode);
+        provideFieldInputOrKeepExistingOne(postcodeFieldLocator, postcode);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillCityField(String city){
-        //TODO check if for logged in user clear is needed.is wait needed?
-        driver.findElement(cityFieldLocator).sendKeys(city);
+        provideFieldInputOrKeepExistingOne(cityFieldLocator, city);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillEmailField(String email){
-        //TODO check if for logged in user clear is needed.is wait needed?
-        driver.findElement(emailFieldLocator).sendKeys(email);
+        provideFieldInputOrKeepExistingOne(emailFieldLocator, email);
         return new CheckoutPage(driver);
     }
 
     public CheckoutPage fillPhoneField(String phone){
-        //TODO check if for logged in user clear is needed.is wait needed?
-        driver.findElement(phoneNumberFieldLocator).sendKeys(phone);
+        provideFieldInputOrKeepExistingOne(phoneNumberFieldLocator, phone);
         return new CheckoutPage(driver);
     }
 
@@ -143,5 +128,12 @@ public class CheckoutPage extends BasePage {
         driver.findElement(placeOrderButtonLocator).click();
         wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
         return new OrderReceivedPage(driver);
+    }
+
+    private void provideFieldInputOrKeepExistingOne(By fieldLocator, String input) {
+        WebElement inputField = driver.findElement(fieldLocator);
+        if (inputField.getAttribute("value").isBlank()){
+            inputField.sendKeys(input);
+        }
     }
 }
