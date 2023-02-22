@@ -60,8 +60,22 @@ public class CheckoutTests extends BaseTest {
 
         checkoutPage.login();
 
-        checkoutPage.fillFirstNameField(firstName)
-                .fillLastNameField(lastName);
+        OrderReceivedPage orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
+                .fillLastNameField(lastName)
+                .fillCountryField(country)
+                .fillAddressField(address)
+                .fillPostcodeField(postcode)
+                .fillCityField(city)
+                .fillEmailField(email)
+                .fillPhoneField(phone)
+                .fillCardNumberField(cardNumber)
+                .fillCardCvcField(cardCvc)
+                .fillCardExpiryDateField(cardExpiryDate)
+                .acceptTermsAndConditions()
+                .confirm();
+
+        Assertions.assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
+                "Order confirmation is not displayed");
 
     }
 }
