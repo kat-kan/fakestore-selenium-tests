@@ -6,6 +6,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class OrderReceivedPage extends BasePage {
 
     private WebDriverWait wait;
@@ -25,5 +29,10 @@ public class OrderReceivedPage extends BasePage {
 
     public WebElement isOrderSuccessfullyFinished(){
         return wait.until(ExpectedConditions.visibilityOfElementLocated(orderReceivedMessageLocator));
+    }
+
+    public void getCurrentDateInSpecifiedFormat(){
+        SimpleDateFormat orderSummaryDateFormat = new SimpleDateFormat("dd MMMM, yyyy", Locale.forLanguageTag("pl"));
+        System.out.print(orderSummaryDateFormat.format(new Date()));
     }
 }
