@@ -45,8 +45,8 @@ public class CartPage extends BasePage {
         return driver.findElements(productLinkInCartLocator);
     }
 
-    public boolean isProductDisplayed(String id) {
-        return driver.findElement(getProductSelector(id)).isDisplayed();
+    public WebElement isProductDisplayed(String id) {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(getProductSelector(id)));
     }
 
     public void changeQuantity(int quantity) {
