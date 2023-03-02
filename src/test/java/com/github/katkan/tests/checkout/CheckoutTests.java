@@ -1,5 +1,6 @@
 package com.github.katkan.tests.checkout;
 
+import com.github.katkan.pageObjects.CartPage;
 import com.github.katkan.pageObjects.CheckoutPage;
 import com.github.katkan.pageObjects.OrderReceivedPage;
 import com.github.katkan.pageObjects.ProductPage;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class CheckoutTests extends BaseTest {
+
+    static final String PAYMENT_METHOD = "Karta debetowa/kredytowa (Stripe)";
 
     String firstName = "Joanna";
     String lastName = "Testowa";
@@ -56,7 +59,9 @@ public class CheckoutTests extends BaseTest {
         ProductPage productPage = new ProductPage(driver);
         productPage.goTo(productUrl).footer.closeCookieConsentBar();
 
-        CheckoutPage checkoutPage = productPage.addToCart().viewCart().goToCheckout();
+        CartPage cartPage = productPage.addToCart().viewCart();
+        String totalPrice = cartPage.getTotalPrice();
+        CheckoutPage checkoutPage = cartPage.goToCheckout();
 
         checkoutPage.login();
 
@@ -74,8 +79,18 @@ public class CheckoutTests extends BaseTest {
                 .acceptTermsAndConditions()
                 .confirm();
 
-        Assertions.assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
-                "Order confirmation is not displayed");
+        Assertions.assertAll(
+                () -> Assertions.assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
+                        "Order confirmation is not displayed"),
+                () -> Assertions.assertEquals(orderReceivedPage.getCurrentDateInSpecifiedFormat(), orderReceivedPage.getOrderDate(),
+                        "The date of the order is not " + orderReceivedPage.getCurrentDateInSpecifiedFormat()),
+                () -> Assertions.assertNotNull(orderReceivedPage.getOrderNumber(), "Order number was not generated"),
+                () -> Assertions.assertEquals(totalPrice, orderReceivedPage.getOrderTotalPrice(),
+                        "Total price is different than given in the cart : " + totalPrice),
+                () -> Assertions.assertEquals(PAYMENT_METHOD, orderReceivedPage.getPaymentMethod(),
+                        "Payment method is not correct, should be " + PAYMENT_METHOD)
+        );
+
 
     }
 }

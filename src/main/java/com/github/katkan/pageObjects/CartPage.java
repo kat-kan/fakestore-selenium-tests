@@ -22,6 +22,7 @@ public class CartPage extends BasePage {
     private By removeButtonLocator = By.cssSelector(".remove");
     private By cartEmptyMessageLocator = By.cssSelector(".cart-empty");
     private By checkoutButtonLocator = By.cssSelector(".checkout-button");
+    private By orderTotalPriceLocator = By.cssSelector(".order-total .amount bdi");
 
 
     public CartPage(WebDriver driver) {
@@ -71,6 +72,11 @@ public class CartPage extends BasePage {
         driver.findElement(checkoutButtonLocator).click();
         return new CheckoutPage(driver);
     }
+
+    public String getTotalPrice(){
+        return driver.findElement(orderTotalPriceLocator).getText();
+    }
+
     private By getProductSelector(String id) {
         return By.cssSelector(removeProductButtonCssSelector.replace("<product_id>", id));
     }

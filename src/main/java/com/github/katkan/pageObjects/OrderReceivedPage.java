@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class OrderReceivedPage extends BasePage {
@@ -40,7 +41,16 @@ public class OrderReceivedPage extends BasePage {
     }
 
     public String getOrderTotalPrice(){
+        //TODO check encoding issue
         return driver.findElement(orderTotalPriceLocator).getText();
+    }
+
+    public String getPaymentMethod(){
+        return driver.findElement(orderPaymentMethodLocator).getText();
+    }
+
+    public List<WebElement> getProductNames(){
+        return driver.findElements(orderProductNamesLocator);
     }
 
     public String getCurrentDateInSpecifiedFormat(){
