@@ -31,8 +31,20 @@ public class OrderReceivedPage extends BasePage {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(orderReceivedMessageLocator));
     }
 
-    public void getCurrentDateInSpecifiedFormat(){
-        SimpleDateFormat orderSummaryDateFormat = new SimpleDateFormat("dd MMMM, yyyy", Locale.forLanguageTag("pl"));
-        System.out.print(orderSummaryDateFormat.format(new Date()));
+    public String getOrderNumber(){
+        return driver.findElement(orderNumberLocator).getText();
+    }
+
+    public String getOrderDate(){
+        return driver.findElement(orderDateLocator).getText();
+    }
+
+    public String getOrderTotalPrice(){
+        return driver.findElement(orderTotalPriceLocator).getText();
+    }
+
+    public String getCurrentDateInSpecifiedFormat(){
+        SimpleDateFormat orderSummaryDateFormat = new SimpleDateFormat("d MMMM, yyyy", Locale.forLanguageTag("pl"));
+        return orderSummaryDateFormat.format(new Date());
     }
 }
