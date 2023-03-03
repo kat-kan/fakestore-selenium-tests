@@ -13,6 +13,8 @@ import java.util.Locale;
 
 public class OrderReceivedPage extends BasePage {
 
+    public HeaderPage header;
+
     private WebDriverWait wait;
 
     private By orderReceivedMessageLocator = By.cssSelector(".woocommerce-thankyou-order-received");
@@ -25,6 +27,7 @@ public class OrderReceivedPage extends BasePage {
 
     public OrderReceivedPage(WebDriver driver) {
         super(driver);
+        header = new HeaderPage(driver);
         wait = new WebDriverWait(driver, 5);
     }
 

@@ -32,6 +32,8 @@ public class CheckoutPage extends BasePage {
     private By stripeFrameLocator = By.cssSelector("#stripe-card-element iframe");
     private By stripeCvcFrameLocator = By.cssSelector("#stripe-cvc-element iframe");
     private By stripeExpiryDateFrameLocator = By.cssSelector("#stripe-exp-element iframe");
+    private By createAccountCheckboxLocator = By.cssSelector("#createaccount");
+    private By newAccountPasswordFieldLocator = By.cssSelector("#account_password");
 
     public CheckoutPage(WebDriver driver) {
         super(driver);
@@ -109,13 +111,20 @@ public class CheckoutPage extends BasePage {
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage login(){
+    public CheckoutPage login(String login, String password){
         driver.findElement(showLoginButtonLocator).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(loginFieldLocator));
-        driver.findElement(loginFieldLocator).sendKeys("jessie.amelia.j@gmail.com");
-        driver.findElement(passwordFieldLocator).sendKeys("23kx3acRhd5d4GK");
+        driver.findElement(loginFieldLocator).sendKeys(login);
+        driver.findElement(passwordFieldLocator).sendKeys(password);
         driver.findElement(loginButtonLocator).click();
         wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
+        return new CheckoutPage(driver);
+    }
+
+    public CheckoutPage createNewAccount(String password){
+        driver.findElement(createAccountCheckboxLocator).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(newAccountPasswordFieldLocator));
+        driver.findElement(newAccountPasswordFieldLocator).sendKeys(password);
         return new CheckoutPage(driver);
     }
 

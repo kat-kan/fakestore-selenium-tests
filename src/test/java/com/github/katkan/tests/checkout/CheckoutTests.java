@@ -1,17 +1,14 @@
 package com.github.katkan.tests.checkout;
 
-import com.github.katkan.pageObjects.CartPage;
-import com.github.katkan.pageObjects.CheckoutPage;
-import com.github.katkan.pageObjects.OrderReceivedPage;
-import com.github.katkan.pageObjects.ProductPage;
+import com.github.katkan.pageObjects.*;
 import com.github.katkan.tests.base.BaseTest;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 public class CheckoutTests extends BaseTest {
 
     static final String PAYMENT_METHOD = "Karta debetowa/kredytowa (Stripe)";
+    static final String EXISTING_USER_LOGIN = "MAIL";
+    static final String EXISTING_USER_PASSWORD = "PASS";
 
     String firstName = "Joanna";
     String lastName = "Testowa";
@@ -24,6 +21,7 @@ public class CheckoutTests extends BaseTest {
     String cardNumber = "4242424242424242";
     String cardExpiryDate = "1030";
     String cardCvc = "123";
+    String password = "Testowe_haslo_123";
 
     @Test
     @DisplayName("Check that order can be finished without creating new account")
@@ -53,7 +51,7 @@ public class CheckoutTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Check that user can login to existing account during order process and finish the order")
+    @DisplayName("Check that user can login to existing account during order process and finish the order. Check order summary correctness")
     void orderAfterLoggingInOnExistingAccountTest() {
         String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
         ProductPage productPage = new ProductPage(driver);
@@ -63,7 +61,7 @@ public class CheckoutTests extends BaseTest {
         String totalPrice = cartPage.getTotalPrice();
         CheckoutPage checkoutPage = cartPage.goToCheckout();
 
-        checkoutPage.login();
+        checkoutPage.login(EXISTING_USER_LOGIN, EXISTING_USER_PASSWORD);
 
         OrderReceivedPage orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
                 .fillLastNameField(lastName)
@@ -93,16 +91,44 @@ public class CheckoutTests extends BaseTest {
         );
     }
 
-    @Test
-    @DisplayName("Check that user can create an account during order process and finish the order")
-    void orderAfterCreatingANewAccount() {
-        String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
-        ProductPage productPage = new ProductPage(driver);
-        productPage.goTo(productUrl).footer.closeCookieConsentBar();
+    @Nested
+    class CheckoutWithNewAccountCreationTests{
+        OrderReceivedPage orderReceivedPage;
 
-        CartPage cartPage = productPage.addToCart().viewCart();
-        String totalPrice = cartPage.getTotalPrice();
-        CheckoutPage checkoutPage = cartPage.goToCheckout();
+        @Test
+        @DisplayName("Check that user can create an account during order process and finish the order")
+        void orderAfterCreatingANewAccount() {
+            String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
+            ProductPage productPage = new ProductPage(driver);
+            productPage.goTo(productUrl).footer.closeCookieConsentBar();
 
+            CartPage cartPage = productPage.addToCart().viewCart();
+            CheckoutPage checkoutPage = cartPage.goToCheckout();
+
+            orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
+                    .fillLastNameField(lastName)
+                    .fillCountryField(country)
+                    .fillAddressField(address)
+                    .fillPostcodeField(postcode)
+                    .fillCityField(city)
+                    .fillEmailField(email)
+                    .fillPhoneField(phone)
+                    .createNewAccount(password)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
+            Assertions.assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
+                    "Order confirmation is not displayed");
+        }
+
+        @AfterEach
+        void deleteAccount(){
+            AccountPage accountPage = orderReceivedPage.header.viewMyAccount();
+            accountPage.deleteAccount();
+        }
     }
+
 }
