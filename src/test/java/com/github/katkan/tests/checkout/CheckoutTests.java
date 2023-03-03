@@ -89,8 +89,20 @@ public class CheckoutTests extends BaseTest {
                         "Total price is different than given in the cart : " + totalPrice),
                 () -> Assertions.assertEquals(PAYMENT_METHOD, orderReceivedPage.getPaymentMethod(),
                         "Payment method is not correct, should be " + PAYMENT_METHOD)
+                //TODO think about product-quantity assertion
         );
+    }
 
+    @Test
+    @DisplayName("Check that user can create an account during order process and finish the order")
+    void orderAfterCreatingANewAccount() {
+        String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
+        ProductPage productPage = new ProductPage(driver);
+        productPage.goTo(productUrl).footer.closeCookieConsentBar();
+
+        CartPage cartPage = productPage.addToCart().viewCart();
+        String totalPrice = cartPage.getTotalPrice();
+        CheckoutPage checkoutPage = cartPage.goToCheckout();
 
     }
 }
