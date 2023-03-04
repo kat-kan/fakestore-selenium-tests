@@ -7,8 +7,11 @@ import org.junit.jupiter.api.*;
 public class CheckoutTests extends BaseTest {
 
     static final String PAYMENT_METHOD = "Karta debetowa/kredytowa (Stripe)";
-    static final String EXISTING_USER_LOGIN = "MAIL";
-    static final String EXISTING_USER_PASSWORD = "PASS";
+    static final String EXISTING_USER_LOGIN = "jessie.amelia.j@gmail.com";
+    static final String EXISTING_USER_PASSWORD = "23kx3acRhd5d4GK";
+
+    ProductPage productPage;
+    CartPage cartPage;
 
     String firstName = "Joanna";
     String lastName = "Testowa";
@@ -23,14 +26,17 @@ public class CheckoutTests extends BaseTest {
     String cardCvc = "123";
     String password = "Testowe_haslo_123";
 
+    @BeforeEach
+    void prepareOrder(){
+        String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
+        productPage = new ProductPage(driver);
+        productPage.goTo(productUrl).footer.closeCookieConsentBar();
+    }
+
     @Test
     @DisplayName("Check that order can be finished without creating new account")
     void orderWithoutCreatingNewAccountTest() {
-        String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
-        ProductPage productPage = new ProductPage(driver);
-        productPage.goTo(productUrl).footer.closeCookieConsentBar();
-
-        CheckoutPage checkoutPage = productPage.addToCart().viewCart().goToCheckout();
+        CheckoutPage checkoutPage = cartPage.goToCheckout();
 
         OrderReceivedPage orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
                 .fillLastNameField(lastName)
@@ -53,16 +59,10 @@ public class CheckoutTests extends BaseTest {
     @Test
     @DisplayName("Check that user can login to existing account during order process and finish the order. Check order summary correctness")
     void orderAfterLoggingInOnExistingAccountTest() {
-        String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
-        ProductPage productPage = new ProductPage(driver);
-        productPage.goTo(productUrl).footer.closeCookieConsentBar();
-
-        CartPage cartPage = productPage.addToCart().viewCart();
         String totalPrice = cartPage.getTotalPrice();
         CheckoutPage checkoutPage = cartPage.goToCheckout();
 
         checkoutPage.login(EXISTING_USER_LOGIN, EXISTING_USER_PASSWORD);
-
         OrderReceivedPage orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
                 .fillLastNameField(lastName)
                 .fillCountryField(country)
@@ -93,6 +93,7 @@ public class CheckoutTests extends BaseTest {
 
     @Nested
     class CheckoutWithNewAccountCreationTests{
+
         OrderReceivedPage orderReceivedPage;
 
         @Test
