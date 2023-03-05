@@ -1,14 +1,13 @@
 package com.github.katkan.tests.checkout;
 
 import com.github.katkan.pageObjects.*;
+import com.github.katkan.properties.Properties;
 import com.github.katkan.tests.base.BaseTest;
 import org.junit.jupiter.api.*;
 
 public class CheckoutTests extends BaseTest {
 
     static final String PAYMENT_METHOD = "Karta debetowa/kredytowa (Stripe)";
-    static final String EXISTING_USER_LOGIN = "jessie.amelia.j@gmail.com";
-    static final String EXISTING_USER_PASSWORD = "23kx3acRhd5d4GK";
 
     ProductPage productPage;
     CartPage cartPage;
@@ -59,10 +58,11 @@ public class CheckoutTests extends BaseTest {
     @Test
     @DisplayName("Check that user can login to existing account during order process and finish the order. Check order summary correctness")
     void orderAfterLoggingInOnExistingAccountTest() {
+        CartPage cartPage = productPage.addToCart().viewCart();
         String totalPrice = cartPage.getTotalPrice();
         CheckoutPage checkoutPage = cartPage.goToCheckout();
 
-        checkoutPage.login(EXISTING_USER_LOGIN, EXISTING_USER_PASSWORD);
+        checkoutPage.login(Properties.getUsername(), Properties.getPassword());
         OrderReceivedPage orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
                 .fillLastNameField(lastName)
                 .fillCountryField(country)
@@ -96,9 +96,40 @@ public class CheckoutTests extends BaseTest {
 
         OrderReceivedPage orderReceivedPage;
 
+        @BeforeEach
+        void prepareOrder(){
+            String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
+            productPage = new ProductPage(driver);
+            productPage.goTo(productUrl).footer.closeCookieConsentBar();
+        }
+
         @Test
         @DisplayName("Check that user can create an account during order process and finish the order")
         void orderAfterCreatingANewAccount() {
+            CartPage cartPage = productPage.addToCart().viewCart();
+            CheckoutPage checkoutPage = cartPage.goToCheckout();
+
+            orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
+                    .fillLastNameField(lastName)
+                    .fillCountryField(country)
+                    .fillAddressField(address)
+                    .fillPostcodeField(postcode)
+                    .fillCityField(city)
+                    .fillEmailField(email)
+                    .fillPhoneField(phone)
+                    .createNewAccount(password)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
+            Assertions.assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
+                    "Order confirmation is not displayed");
+        }
+
+        @Test
+        void verifyOrdersInMyAccountPageTest(){
             String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
             ProductPage productPage = new ProductPage(driver);
             productPage.goTo(productUrl).footer.closeCookieConsentBar();
@@ -120,9 +151,6 @@ public class CheckoutTests extends BaseTest {
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
-
-            Assertions.assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
-                    "Order confirmation is not displayed");
         }
 
         @AfterEach
