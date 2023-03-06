@@ -30,6 +30,7 @@ public class CheckoutTests extends BaseTest {
         String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
         productPage = new ProductPage(driver);
         productPage.goTo(productUrl).footer.closeCookieConsentBar();
+        cartPage = productPage.addToCart().viewCart();
     }
 
     @Test
@@ -58,7 +59,6 @@ public class CheckoutTests extends BaseTest {
     @Test
     @DisplayName("Check that user can login to existing account during order process and finish the order. Check order summary correctness")
     void orderAfterLoggingInOnExistingAccountTest() {
-        CartPage cartPage = productPage.addToCart().viewCart();
         String totalPrice = cartPage.getTotalPrice();
         CheckoutPage checkoutPage = cartPage.goToCheckout();
 
@@ -96,17 +96,9 @@ public class CheckoutTests extends BaseTest {
 
         OrderReceivedPage orderReceivedPage;
 
-        @BeforeEach
-        void prepareOrder(){
-            String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
-            productPage = new ProductPage(driver);
-            productPage.goTo(productUrl).footer.closeCookieConsentBar();
-        }
-
         @Test
         @DisplayName("Check that user can create an account during order process and finish the order")
         void orderAfterCreatingANewAccount() {
-            CartPage cartPage = productPage.addToCart().viewCart();
             CheckoutPage checkoutPage = cartPage.goToCheckout();
 
             orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
@@ -128,34 +120,9 @@ public class CheckoutTests extends BaseTest {
                     "Order confirmation is not displayed");
         }
 
-        @Test
-        void verifyOrdersInMyAccountPageTest(){
-            String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
-            ProductPage productPage = new ProductPage(driver);
-            productPage.goTo(productUrl).footer.closeCookieConsentBar();
-
-            CartPage cartPage = productPage.addToCart().viewCart();
-            CheckoutPage checkoutPage = cartPage.goToCheckout();
-
-            orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
-                    .fillLastNameField(lastName)
-                    .fillCountryField(country)
-                    .fillAddressField(address)
-                    .fillPostcodeField(postcode)
-                    .fillCityField(city)
-                    .fillEmailField(email)
-                    .fillPhoneField(phone)
-                    .createNewAccount(password)
-                    .fillCardNumberField(cardNumber)
-                    .fillCardCvcField(cardCvc)
-                    .fillCardExpiryDateField(cardExpiryDate)
-                    .acceptTermsAndConditions()
-                    .confirm();
-        }
-
         @AfterEach
         void deleteAccount(){
-            AccountPage accountPage = orderReceivedPage.header.viewMyAccount();
+            AccountPage accountPage = new OrderReceivedPage(driver).header.viewMyAccount();
             accountPage.deleteAccount();
         }
     }
