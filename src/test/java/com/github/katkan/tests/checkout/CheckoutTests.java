@@ -5,13 +5,13 @@ import com.github.katkan.properties.Properties;
 import com.github.katkan.tests.base.BaseTest;
 import org.junit.jupiter.api.*;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class CheckoutTests extends BaseTest {
 
     static final String PAYMENT_METHOD = "Karta debetowa/kredytowa (Stripe)";
 
-    ProductPage productPage;
-    CartPage cartPage;
-
+    String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
     String firstName = "Joanna";
     String lastName = "Testowa";
     String country = "Polska";
@@ -26,17 +26,19 @@ public class CheckoutTests extends BaseTest {
     String password = "Testowe_haslo_123";
 
     @BeforeEach
-    void prepareOrder(){
-        String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
-        productPage = new ProductPage(driver);
-        productPage.goTo(productUrl).footer.closeCookieConsentBar();
-        cartPage = productPage.addToCart().viewCart();
+    void prepareOrder() {
+        ProductPage productPage = new ProductPage(driver);
+        productPage.goTo(productUrl)
+                .footer
+                .closeCookieConsentBar();
+        productPage.addToCart()
+                .viewCart();
     }
 
     @Test
-    @DisplayName("Check that order can be finished without creating new account")
+    @DisplayName("Create an order without creating new account")
     void orderWithoutCreatingNewAccountTest() {
-        CheckoutPage checkoutPage = cartPage.goToCheckout();
+        CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
         OrderReceivedPage orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
                 .fillLastNameField(lastName)
@@ -52,15 +54,15 @@ public class CheckoutTests extends BaseTest {
                 .acceptTermsAndConditions()
                 .confirm();
 
-        Assertions.assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
+        assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
                 "Order confirmation is not displayed");
     }
 
     @Test
-    @DisplayName("Check that user can login to existing account during order process and finish the order. Check order summary correctness")
+    @DisplayName("Login to existing account during order process. Create an order and check order summary correctness")
     void orderAfterLoggingInOnExistingAccountTest() {
-        String totalPrice = cartPage.getTotalPrice();
-        CheckoutPage checkoutPage = cartPage.goToCheckout();
+        String totalPrice = new CartPage(driver).getTotalPrice();
+        CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
         checkoutPage.login(Properties.getUsername(), Properties.getPassword());
         OrderReceivedPage orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
@@ -78,30 +80,32 @@ public class CheckoutTests extends BaseTest {
                 .confirm();
 
         Assertions.assertAll(
-                () -> Assertions.assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
+                () -> assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
                         "Order confirmation is not displayed"),
-                () -> Assertions.assertEquals(orderReceivedPage.getCurrentDateInSpecifiedFormat(), orderReceivedPage.getOrderDate(),
-                        "The date of the order is not " + orderReceivedPage.getCurrentDateInSpecifiedFormat()),
-                () -> Assertions.assertNotNull(orderReceivedPage.getOrderNumber(), "Order number was not generated"),
-                () -> Assertions.assertEquals(totalPrice, orderReceivedPage.getOrderTotalPrice(),
+                () -> assertEquals(orderReceivedPage.getCurrentDateInSpecifiedFormat(), orderReceivedPage.getOrderDate(),
+                        "The date of the order is not correct or correctly formatted" + orderReceivedPage.getCurrentDateInSpecifiedFormat()),
+                () -> assertNotNull(orderReceivedPage.getOrderId(), "Order number was not generated"),
+                () -> assertEquals(totalPrice, orderReceivedPage.getOrderTotalPrice(),
                         "Total price is different than given in the cart : " + totalPrice),
-                () -> Assertions.assertEquals(PAYMENT_METHOD, orderReceivedPage.getPaymentMethod(),
+                () -> assertEquals(PAYMENT_METHOD, orderReceivedPage.getPaymentMethod(),
                         "Payment method is not correct, should be " + PAYMENT_METHOD)
                 //TODO think about product-quantity assertion
         );
     }
 
     @Nested
-    class CheckoutWithNewAccountCreationTests{
+    class CheckoutWithNewAccountCreationTests {
 
-        OrderReceivedPage orderReceivedPage;
+        @BeforeEach
+        void goToCheckout() {
+            new CartPage(driver)
+                    .goToCheckout();
+        }
 
         @Test
         @DisplayName("Check that user can create an account during order process and finish the order")
         void orderAfterCreatingANewAccount() {
-            CheckoutPage checkoutPage = cartPage.goToCheckout();
-
-            orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
+            OrderReceivedPage orderReceivedPage = new CheckoutPage(driver).fillFirstNameField(firstName)
                     .fillLastNameField(lastName)
                     .fillCountryField(country)
                     .fillAddressField(address)
@@ -116,14 +120,76 @@ public class CheckoutTests extends BaseTest {
                     .acceptTermsAndConditions()
                     .confirm();
 
-            Assertions.assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
+            assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
                     "Order confirmation is not displayed");
         }
 
+
+        @Test
+        @DisplayName("Create an order and check it in My Account page")
+        void checkOrdersInMyAccountPageTest() {
+            OrderReceivedPage orderReceivedPage = new CheckoutPage(driver).fillFirstNameField(firstName)
+                    .fillLastNameField(lastName)
+                    .fillCountryField(country)
+                    .fillAddressField(address)
+                    .fillPostcodeField(postcode)
+                    .fillCityField(city)
+                    .fillEmailField(email)
+                    .fillPhoneField(phone)
+                    .createNewAccount(password)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
+            String orderId = orderReceivedPage.getOrderId();
+            String orderDate = orderReceivedPage.getOrderDate();
+
+            OrderDetailsPage orderDetailsPage = orderReceivedPage.header.viewMyAccount()
+                    .viewOrders()
+                    .goToOrderDetails(orderId);
+
+            Assertions.assertAll(
+                    () -> assertEquals(orderId, orderDetailsPage.getOrderId(),
+                            "The id on order details page should be " + orderId),
+                    () -> assertEquals(orderDate, orderDetailsPage.getOrderDate(),
+                            "The order date on order details page should be " + orderDate)
+            );
+
+        }
+
         @AfterEach
-        void deleteAccount(){
-            AccountPage accountPage = new OrderReceivedPage(driver).header.viewMyAccount();
-            accountPage.deleteAccount();
+        void deleteAccount() {
+            new OrderReceivedPage(driver)
+                    .header
+                    .viewMyAccount()
+                    .deleteAccount();
+        }
+    }
+
+    @Nested
+    class CheckoutDataValidationTests{
+
+        @Test
+        @DisplayName("Check missing first name validation message")
+        void checkFirstNameFieldValidationTest() {
+            CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
+
+            checkoutPage.fillLastNameField(lastName)
+                    .fillCountryField(country)
+                    .fillAddressField(address)
+                    .fillPostcodeField(postcode)
+                    .fillCityField(city)
+                    .fillEmailField(email)
+                    .fillPhoneField(phone)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
+            Assertions.assertEquals("Imię płatnika jest wymaganym polem", checkoutPage.getErrorMessageText());
         }
     }
 
