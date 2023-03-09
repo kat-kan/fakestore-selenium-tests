@@ -1,5 +1,6 @@
 package com.github.katkan.tests.base;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +21,7 @@ public class BaseTest {
         prefs.put("autofill.profile_enabled", false);
         options.setExperimentalOption("prefs", prefs);
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver1.exe");
+        driver = WebDriverManager.chromedriver().capabilities(options).create();
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
