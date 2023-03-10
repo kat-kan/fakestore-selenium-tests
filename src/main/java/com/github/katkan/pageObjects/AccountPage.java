@@ -21,6 +21,7 @@ public class AccountPage extends BasePage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(deleteButtonLocator));
         driver.findElement(deleteButtonLocator).click();
         driver.switchTo().alert().accept();
+        wait.until(ExpectedConditions.urlToBe("https://fakestore.testelka.pl/"));
     }
 
     public MyOrdersPage viewOrders(){

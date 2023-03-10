@@ -169,10 +169,10 @@ public class CheckoutTests extends BaseTest {
     }
 
     @Nested
-    class CheckoutDataValidationTests{
+    class CheckoutDataValidationTests {
 
         @Test
-        @DisplayName("Check missing first name validation message")
+        @DisplayName("Check empty first name validation message")
         void checkFirstNameFieldValidationTest() {
             CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
@@ -189,7 +189,70 @@ public class CheckoutTests extends BaseTest {
                     .acceptTermsAndConditions()
                     .confirm();
 
-            Assertions.assertEquals("Imię płatnika jest wymaganym polem", checkoutPage.getErrorMessageText());
+            assertEquals("Imię płatnika jest wymaganym polem", checkoutPage.getErrorMessageText());
+        }
+
+        @Test
+        @DisplayName("Check empty last name validation message")
+        void checkLastNameFieldValidationTest() {
+            CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
+
+            checkoutPage.fillFirstNameField(firstName)
+                    .fillCountryField(country)
+                    .fillAddressField(address)
+                    .fillPostcodeField(postcode)
+                    .fillCityField(city)
+                    .fillEmailField(email)
+                    .fillPhoneField(phone)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
+            assertEquals("Nazwisko płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
+        }
+
+        @Test
+        @DisplayName("Check empty address validation message")
+        void checkAddressFieldValidationTest() {
+            CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
+
+            checkoutPage.fillFirstNameField(firstName)
+                    .fillLastNameField(lastName)
+                    .fillCountryField(country)
+                    .fillPostcodeField(postcode)
+                    .fillCityField(city)
+                    .fillEmailField(email)
+                    .fillPhoneField(phone)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
+            assertEquals("Ulica płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
+        }
+
+        @Test
+        @DisplayName("Check empty postcode validation message")
+        void checkPostcodeFieldValidationTest() {
+            CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
+
+            checkoutPage.fillFirstNameField(firstName)
+                    .fillLastNameField(lastName)
+                    .fillCountryField(country)
+                    .fillAddressField(address)
+                    .fillCityField(city)
+                    .fillEmailField(email)
+                    .fillPhoneField(phone)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
+            assertEquals("Ulica płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
         }
     }
 

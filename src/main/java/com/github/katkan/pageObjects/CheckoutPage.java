@@ -34,6 +34,7 @@ public class CheckoutPage extends BasePage {
     private By stripeExpiryDateFrameLocator = By.cssSelector("#stripe-exp-element iframe");
     private By createAccountCheckboxLocator = By.cssSelector("#createaccount");
     private By newAccountPasswordFieldLocator = By.cssSelector("#account_password");
+    private By errorMessageLocator = By.cssSelector(".woocommerce-error");
 
     public CheckoutPage(WebDriver driver) {
         super(driver);
@@ -118,6 +119,7 @@ public class CheckoutPage extends BasePage {
         driver.findElement(passwordFieldLocator).sendKeys(password);
         driver.findElement(loginButtonLocator).click();
         wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
+        //TODO add wait for non-visibility of login related fields
         return new CheckoutPage(driver);
     }
 
@@ -137,6 +139,10 @@ public class CheckoutPage extends BasePage {
         driver.findElement(placeOrderButtonLocator).click();
         wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
         return new OrderReceivedPage(driver);
+    }
+
+    public String getErrorMessageText(){
+        return driver.findElement(errorMessageLocator).getText();
     }
 
     private void provideFieldInputOrKeepExistingOne(By fieldLocator, String input) {
