@@ -252,7 +252,51 @@ public class CheckoutTests extends BaseTest {
                     .acceptTermsAndConditions()
                     .confirm();
 
+            assertEquals("Kod pocztowy płatnika nie jest prawidłowym kodem pocztowym.", checkoutPage.getErrorMessageText());
+        }
+
+        @Test
+        @DisplayName("Check empty street validation message")
+        void checkStreetFieldValidationTest() {
+            CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
+
+            checkoutPage.fillFirstNameField(firstName)
+                    .fillLastNameField(lastName)
+                    .fillCountryField(country)
+                    .fillPostcodeField(postcode)
+                    .fillCityField(city)
+                    .fillEmailField(email)
+                    .fillPhoneField(phone)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
             assertEquals("Ulica płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
+        }
+
+        @Test
+        @DisplayName("Check incorrect postcode (other than digits) validation message")
+        void checkIncorrectPostcodeFieldValidationTest() {
+            String incorrectPostcode = "not a postcode";
+            CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
+
+            checkoutPage.fillFirstNameField(firstName)
+                    .fillLastNameField(lastName)
+                    .fillCountryField(country)
+                    .fillAddressField(address)
+                    .fillPostcodeField(incorrectPostcode)
+                    .fillCityField(city)
+                    .fillEmailField(email)
+                    .fillPhoneField(phone)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
+            assertEquals("Kod pocztowy płatnika nie jest prawidłowym kodem pocztowym.", checkoutPage.getErrorMessageText());
         }
     }
 
