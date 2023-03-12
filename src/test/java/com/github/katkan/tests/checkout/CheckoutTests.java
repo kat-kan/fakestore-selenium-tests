@@ -277,6 +277,27 @@ public class CheckoutTests extends BaseTest {
         }
 
         @Test
+        @DisplayName("Check empty email validation message")
+        void checkEmailFieldValidationTest() {
+            CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
+
+            checkoutPage.fillFirstNameField(firstName)
+                    .fillLastNameField(lastName)
+                    .fillCountryField(country)
+                    .fillAddressField(address)
+                    .fillPostcodeField(postcode)
+                    .fillCityField(city)
+                    .fillPhoneField(phone)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
+            assertEquals("Adres email płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
+        }
+
+        @Test
         @DisplayName("Check incorrect postcode (other than digits) validation message")
         void checkIncorrectPostcodeFieldValidationTest() {
             String incorrectPostcode = "not a postcode";
