@@ -2,7 +2,7 @@
 
 Collection of Selenium tests for Fakestore with Page Object Model
 
-![](https://img.shields.io/badge/Code-Java%2017-informational?style=flat&color=blueviolet)
+![](https://img.shields.io/badge/Code-Java%2019-informational?style=flat&color=blueviolet)
 ![](https://img.shields.io/badge/Framework-JUnit%205-informational?style=flat&&color=blueviolet)
 ![](https://img.shields.io/badge/Library-Selenium%20Webdriver-informational?style=flat&&color=blueviolet)
 ![](https://img.shields.io/badge/Tool-Maven-informational?style=flat&&color=blueviolet)
