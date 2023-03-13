@@ -43,7 +43,7 @@ public class CartTests extends BaseTest {
         CartPage cartPage = categoryPage.addToCart(productId).viewCart();
 
         Assertions.assertAll(
-                () -> Assertions.assertTrue(cartPage.isProductDisplayed(productId),
+                () -> Assertions.assertDoesNotThrow(() -> cartPage.isProductDisplayed(productId),
                         "The product that was added is not displayed in the cart"),
                 () -> Assertions.assertEquals(1, cartPage.getProductQuantity(),
                         "The quantity of product is not 1")

@@ -1,6 +1,7 @@
 package com.github.katkan.pageObjects;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -20,6 +21,8 @@ public class CartPage extends BasePage {
     private By updateCartButtonLocator = By.name("update_cart");
     private By removeButtonLocator = By.cssSelector(".remove");
     private By cartEmptyMessageLocator = By.cssSelector(".cart-empty");
+    private By checkoutButtonLocator = By.cssSelector(".checkout-button");
+    private By orderTotalPriceLocator = By.cssSelector(".order-total .amount bdi");
 
 
     public CartPage(WebDriver driver) {
@@ -43,8 +46,8 @@ public class CartPage extends BasePage {
         return driver.findElements(productLinkInCartLocator);
     }
 
-    public boolean isProductDisplayed(String id) {
-        return driver.findElement(getProductSelector(id)).isDisplayed();
+    public WebElement isProductDisplayed(String id) {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(getProductSelector(id)));
     }
 
     public void changeQuantity(int quantity) {
@@ -63,6 +66,15 @@ public class CartPage extends BasePage {
     public boolean isCartEmpty() {
         wait.until(ExpectedConditions.presenceOfElementLocated(cartEmptyMessageLocator));
         return driver.findElement(cartEmptyMessageLocator).isDisplayed();
+    }
+
+    public CheckoutPage goToCheckout(){
+        driver.findElement(checkoutButtonLocator).click();
+        return new CheckoutPage(driver);
+    }
+
+    public String getTotalPrice(){
+        return driver.findElement(orderTotalPriceLocator).getText();
     }
 
     private By getProductSelector(String id) {
