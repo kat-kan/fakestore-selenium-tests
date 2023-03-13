@@ -18,7 +18,7 @@ public class OrderReceivedPage extends BasePage {
     private WebDriverWait wait;
 
     private By orderReceivedMessageLocator = By.cssSelector(".woocommerce-thankyou-order-received");
-    private By orderNumberLocator = By.cssSelector(".woocommerce-order .order strong");
+    private By orderIdLocator = By.cssSelector(".woocommerce-order .order strong");
     private By orderDateLocator = By.cssSelector(".woocommerce-order .date strong");
     private By orderTotalPriceLocator = By.cssSelector(".woocommerce-order .total strong");
     private By orderPaymentMethodLocator = By.cssSelector(".woocommerce-order .method strong");
@@ -35,8 +35,8 @@ public class OrderReceivedPage extends BasePage {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(orderReceivedMessageLocator));
     }
 
-    public String getOrderNumber(){
-        return driver.findElement(orderNumberLocator).getText();
+    public String getOrderId(){
+        return driver.findElement(orderIdLocator).getText();
     }
 
     public String getOrderDate(){
