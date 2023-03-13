@@ -189,7 +189,7 @@ public class CheckoutTests extends BaseTest {
                     .acceptTermsAndConditions()
                     .confirm();
 
-            assertEquals("Imię płatnika jest wymaganym polem", checkoutPage.getErrorMessageText());
+            assertEquals("Imię płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
         }
 
         @Test
@@ -295,6 +295,28 @@ public class CheckoutTests extends BaseTest {
                     .confirm();
 
             assertEquals("Adres email płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
+
+        }
+
+        @Test
+        @DisplayName("Check empty phone validation message")
+        void checkPhoneFieldValidationTest() {
+            CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
+
+            checkoutPage.fillFirstNameField(firstName)
+                    .fillLastNameField(lastName)
+                    .fillCountryField(country)
+                    .fillAddressField(address)
+                    .fillPostcodeField(postcode)
+                    .fillCityField(city)
+                    .fillEmailField(email)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
+            assertEquals("Telefon płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
         }
 
         @Test
@@ -318,6 +340,29 @@ public class CheckoutTests extends BaseTest {
                     .confirm();
 
             assertEquals("Kod pocztowy płatnika nie jest prawidłowym kodem pocztowym.", checkoutPage.getErrorMessageText());
+        }
+
+        @Test
+        @DisplayName("Check incorrect phone (other than digits) validation message")
+        void checkIncorrectPhoneFieldValidationTest() {
+            String incorrectPhone = "not a phone number";
+            CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
+
+            checkoutPage.fillFirstNameField(firstName)
+                    .fillLastNameField(lastName)
+                    .fillCountryField(country)
+                    .fillAddressField(address)
+                    .fillPostcodeField(postcode)
+                    .fillCityField(city)
+                    .fillEmailField(email)
+                    .fillPhoneField(incorrectPhone)
+                    .fillCardNumberField(cardNumber)
+                    .fillCardCvcField(cardCvc)
+                    .fillCardExpiryDateField(cardExpiryDate)
+                    .acceptTermsAndConditions()
+                    .confirm();
+
+            assertEquals("Telefon płatnika nie jest poprawnym numerem telefonu.", checkoutPage.getErrorMessageText());
         }
     }
 
