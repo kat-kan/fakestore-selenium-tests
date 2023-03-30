@@ -1,4 +1,4 @@
-package com.github.katkan.pageObjects;
+package com.github.katkan.pages.main;
 
 import org.openqa.selenium.WebDriver;
 

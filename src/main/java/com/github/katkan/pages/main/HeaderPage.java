@@ -1,11 +1,13 @@
-package com.github.katkan.pageObjects;
+package com.github.katkan.pages.main;
 
+import com.github.katkan.pages.cart.CartPage;
+import com.github.katkan.pages.account.AccountPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class HeaderPage extends BasePage{
+public class HeaderPage extends BasePage {
 
-    protected HeaderPage(WebDriver driver) {
+    public HeaderPage(WebDriver driver) {
         super(driver);
     }
 

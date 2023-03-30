@@ -1,5 +1,7 @@
-package com.github.katkan.pageObjects;
+package com.github.katkan.pages.checkout;
 
+import com.github.katkan.pages.order.OrderReceivedPage;
+import com.github.katkan.pages.main.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

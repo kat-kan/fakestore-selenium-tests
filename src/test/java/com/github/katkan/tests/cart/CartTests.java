@@ -1,8 +1,8 @@
 package com.github.katkan.tests.cart;
 
-import com.github.katkan.pageObjects.CartPage;
-import com.github.katkan.pageObjects.CategoryPage;
-import com.github.katkan.pageObjects.ProductPage;
+import com.github.katkan.pages.cart.CartPage;
+import com.github.katkan.pages.category.CategoryPage;
+import com.github.katkan.pages.product.ProductPage;
 import com.github.katkan.tests.base.BaseTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

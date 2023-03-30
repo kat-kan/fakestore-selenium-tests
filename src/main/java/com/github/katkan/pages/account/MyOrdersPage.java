@@ -1,5 +1,6 @@
-package com.github.katkan.pageObjects;
+package com.github.katkan.pages.account;
 
+import com.github.katkan.pages.main.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
