@@ -1,5 +1,8 @@
-package com.github.katkan.pageObjects;
+package com.github.katkan.pages.category;
 
+import com.github.katkan.pages.cart.CartPage;
+import com.github.katkan.pages.main.BasePage;
+import com.github.katkan.pages.main.FooterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;

@@ -1,6 +1,10 @@
 package com.github.katkan.tests.checkout;
 
-import com.github.katkan.pageObjects.*;
+import com.github.katkan.pages.account.OrderDetailsPage;
+import com.github.katkan.pages.cart.CartPage;
+import com.github.katkan.pages.checkout.CheckoutPage;
+import com.github.katkan.pages.order.OrderReceivedPage;
+import com.github.katkan.pages.product.ProductPage;
 import com.github.katkan.properties.Properties;
 import com.github.katkan.tests.base.BaseTest;
 import org.junit.jupiter.api.*;

@@ -1,5 +1,7 @@
-package com.github.katkan.pageObjects;
+package com.github.katkan.pages.order;
 
+import com.github.katkan.pages.main.BasePage;
+import com.github.katkan.pages.main.HeaderPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
