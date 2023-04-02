@@ -41,7 +41,7 @@ public class CheckoutTests extends BaseTest {
 
     @Test
     @DisplayName("Create an order without creating new account")
-    void orderWithoutCreatingNewAccountTest() {
+    void orderWithoutCreatingNewAccount() {
         CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
         OrderReceivedPage orderReceivedPage = checkoutPage.fillFirstNameField(firstName)
@@ -64,7 +64,7 @@ public class CheckoutTests extends BaseTest {
 
     @Test
     @DisplayName("Login to existing account during order process. Create an order and check order summary correctness")
-    void orderAfterLoggingInOnExistingAccountTest() {
+    void orderAfterLoggingInOnExistingAccount() {
         String totalPrice = new CartPage(driver).getTotalPrice();
         CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
@@ -131,7 +131,7 @@ public class CheckoutTests extends BaseTest {
 
         @Test
         @DisplayName("Create an order and check it in My Account page")
-        void checkOrdersInMyAccountPageTest() {
+        void checkOrdersInMyAccountPage() {
             OrderReceivedPage orderReceivedPage = new CheckoutPage(driver).fillFirstNameField(firstName)
                     .fillLastNameField(lastName)
                     .fillCountryField(country)
@@ -177,7 +177,7 @@ public class CheckoutTests extends BaseTest {
 
         @Test
         @DisplayName("Check empty first name validation message")
-        void checkFirstNameFieldValidationTest() {
+        void checkFirstNameFieldValidation() {
             CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
             checkoutPage.fillLastNameField(lastName)
@@ -198,7 +198,7 @@ public class CheckoutTests extends BaseTest {
 
         @Test
         @DisplayName("Check empty last name validation message")
-        void checkLastNameFieldValidationTest() {
+        void checkLastNameFieldValidation() {
             CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
             checkoutPage.fillFirstNameField(firstName)
@@ -219,7 +219,7 @@ public class CheckoutTests extends BaseTest {
 
         @Test
         @DisplayName("Check empty address validation message")
-        void checkAddressFieldValidationTest() {
+        void checkAddressFieldValidation() {
             CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
             checkoutPage.fillFirstNameField(firstName)
@@ -240,7 +240,7 @@ public class CheckoutTests extends BaseTest {
 
         @Test
         @DisplayName("Check empty postcode validation message")
-        void checkPostcodeFieldValidationTest() {
+        void checkPostcodeFieldValidation() {
             CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
             checkoutPage.fillFirstNameField(firstName)
@@ -261,7 +261,7 @@ public class CheckoutTests extends BaseTest {
 
         @Test
         @DisplayName("Check empty street validation message")
-        void checkStreetFieldValidationTest() {
+        void checkStreetFieldValidation() {
             CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
             checkoutPage.fillFirstNameField(firstName)
@@ -282,7 +282,7 @@ public class CheckoutTests extends BaseTest {
 
         @Test
         @DisplayName("Check empty email validation message")
-        void checkEmailFieldValidationTest() {
+        void checkEmailFieldValidation() {
             CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
             checkoutPage.fillFirstNameField(firstName)
@@ -304,7 +304,7 @@ public class CheckoutTests extends BaseTest {
 
         @Test
         @DisplayName("Check empty phone validation message")
-        void checkPhoneFieldValidationTest() {
+        void checkPhoneFieldValidation() {
             CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
             checkoutPage.fillFirstNameField(firstName)
@@ -325,7 +325,7 @@ public class CheckoutTests extends BaseTest {
 
         @Test
         @DisplayName("Check incorrect postcode (other than digits) validation message")
-        void checkIncorrectPostcodeFieldValidationTest() {
+        void checkIncorrectPostcodeFieldValidation() {
             String incorrectPostcode = "not a postcode";
             CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
@@ -348,7 +348,7 @@ public class CheckoutTests extends BaseTest {
 
         @Test
         @DisplayName("Check incorrect phone (other than digits) validation message")
-        void checkIncorrectPhoneFieldValidationTest() {
+        void checkIncorrectPhoneFieldValidation() {
             String incorrectPhone = "not a phone number";
             CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 

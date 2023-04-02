@@ -19,7 +19,7 @@ public class CartTests extends BaseTest {
 
     @Test
     @DisplayName("Check adding product to cart from the product page")
-    void addProductToCartFromProductPageTest() {
+    void addProductToCartFromProductPage() {
         String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
         ProductPage productPage = new ProductPage(driver).goTo(productUrl);
         productPage.footer.closeCookieConsentBar();
@@ -34,7 +34,7 @@ public class CartTests extends BaseTest {
 
     @Test
     @DisplayName("Check adding product to cart from category page")
-    void addProductToCartFromCategoryPageTest() {
+    void addProductToCartFromCategoryPage() {
         String url = "https://fakestore.testelka.pl/product-category/yoga-i-pilates/";
         String productId = "61";
 
@@ -52,7 +52,7 @@ public class CartTests extends BaseTest {
 
     @Test
     @DisplayName("Check adding one product to cart ten times")
-    void addOneProductToCart10TimesTest() {
+    void addOneProductToCart10Times() {
         String productUrl = "https://fakestore.testelka.pl/product/wakacje-z-yoga-w-kraju-kwitnacej-wisni/";
 
         ProductPage productPage = new ProductPage(driver);
@@ -72,7 +72,7 @@ public class CartTests extends BaseTest {
 
     @Test
     @DisplayName("Check adding product to cart and modifying the amount on the product page")
-    void addProductToCartAndModifyAmountOnProductPageTest() {
+    void addProductToCartAndModifyAmountOnProductPage() {
         String url = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
         int numberOfItems = 9;
         ProductPage productPage = new ProductPage(driver).goTo(url);
@@ -89,7 +89,7 @@ public class CartTests extends BaseTest {
 
     @Test
     @DisplayName("Check adding 10 different trips to cart")
-    void add10DifferentProductsToCartTest() {
+    void add10DifferentProductsToCart() {
         ProductPage productPage = new ProductPage(driver);
         String productGenericUrlPart = "https://fakestore.testelka.pl/product/";
         productPages.forEach(product -> productPage.goTo(productGenericUrlPart + product).addToCart());
@@ -110,7 +110,7 @@ public class CartTests extends BaseTest {
 
     @Test
     @DisplayName("Check changing product amount on the cart page")
-    void changeProductAmountInCartTest() {
+    void changeProductAmountInCart() {
         String url = "https://fakestore.testelka.pl/product/wspinaczka-island-peak/";
         int quantity = 4;
         ProductPage productPage = new ProductPage(driver);
@@ -128,7 +128,7 @@ public class CartTests extends BaseTest {
 
     @Test
     @DisplayName("Check removing product on the cart page")
-    void removeProductFromCartTest() {
+    void removeProductFromCart() {
         String url = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
         ProductPage productPage = new ProductPage(driver);
         productPage.goTo(url).footer.closeCookieConsentBar();
