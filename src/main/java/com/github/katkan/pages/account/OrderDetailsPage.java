@@ -1,23 +1,29 @@
 package com.github.katkan.pages.account;
 
 import com.github.katkan.pages.main.BasePage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class OrderDetailsPage extends BasePage {
 
-    private By orderIdLocator = By.cssSelector(".order-number");
-    private By orderDateLocator = By.cssSelector(".order-date");
+    @FindBy(css = ".order-number")
+    WebElement orderId;
+
+    @FindBy(css = ".order-date")
+    WebElement orderDate;
 
     public OrderDetailsPage(WebDriver driver) {
         super(driver);
+        PageFactory.initElements(driver, this);
     }
 
-    public String getOrderId(){
-        return driver.findElement(orderIdLocator).getText();
+    public String getOrderId() {
+        return orderId.getText();
     }
 
-    public String getOrderDate(){
-        return driver.findElement(orderDateLocator).getText();
+    public String getOrderDate() {
+        return orderDate.getText();
     }
 }
