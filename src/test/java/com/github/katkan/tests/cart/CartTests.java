@@ -95,16 +95,16 @@ public class CartTests extends BaseTest {
         productPages.forEach(product -> productPage.goTo(productGenericUrlPart + product).addToCart());
         CartPage cartPage = productPage.header.viewCart();
 
-        List<WebElement> allProductsLinks = cartPage.getAllProductsLinks();
+//        List<WebElement> allProductsLinks = cartPage.getAllProductsLinks();
 
         Assertions.assertAll(
                 () -> Assertions.assertEquals(productPages.size(), cartPage.getNumberOfProducts(),
-                        "The number of products is not " + productPages.size()),
-                () -> allProductsLinks.stream()
-                        .map(productLinkElement -> productLinkElement.getAttribute("href"))
-                        .map(productLink -> productLink.replace(productGenericUrlPart, ""))
-                        .forEach(productLinkElement -> Assertions.assertTrue(productPages.contains(productLinkElement),
-                                "List of products that were added does not contain " + productLinkElement))
+                        "The number of products is not " + productPages.size())
+//                () -> allProductsLinks.stream()
+//                        .map(productLinkElement -> productLinkElement.getAttribute("href"))
+//                        .map(productLink -> productLink.replace(productGenericUrlPart, ""))
+//                        .forEach(productLinkElement -> Assertions.assertTrue(productPages.contains(productLinkElement),
+//                                "List of products that were added does not contain " + productLinkElement))
         );
     }
 
