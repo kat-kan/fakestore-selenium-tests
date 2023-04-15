@@ -11,13 +11,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class AccountPage extends BasePage {
 
-    private WebDriverWait wait;
-
     @FindBy(css = "[class$='--orders']")
-    WebElement myOrdersButton;
+    private WebElement myOrdersButton;
 
     @FindBy(css = ".delete-me")
-    WebElement deleteButton;
+    private WebElement deleteButton;
+
+    private WebDriverWait wait;
 
     public AccountPage(WebDriver driver) {
         super(driver);
@@ -32,7 +32,7 @@ public class AccountPage extends BasePage {
         wait.until(ExpectedConditions.urlToBe("https://fakestore.testelka.pl/"));
     }
 
-    public MyOrdersTable viewOrders(){
+    public MyOrdersTable viewOrders() {
         wait.until(ExpectedConditions.visibilityOf(myOrdersButton));
         myOrdersButton.click();
         return new MyOrdersTable(driver);
