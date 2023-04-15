@@ -1,6 +1,7 @@
 package com.github.katkan.pages.account;
 
 import com.github.katkan.pages.main.BasePage;
+import com.github.katkan.pages.tables.my_orders.MyOrdersTable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -25,9 +26,15 @@ public class AccountPage extends BasePage {
         wait.until(ExpectedConditions.urlToBe("https://fakestore.testelka.pl/"));
     }
 
-    public MyOrdersPage viewOrders(){
+/*    public MyOrdersPage viewOrders(){
         wait.until(ExpectedConditions.visibilityOfElementLocated(myOrdersButtonLocator));
         driver.findElement(myOrdersButtonLocator).click();
         return new MyOrdersPage(driver);
+    }*/
+
+    public MyOrdersTable viewOrders(){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(myOrdersButtonLocator));
+        driver.findElement(myOrdersButtonLocator).click();
+        return new MyOrdersTable(driver);
     }
 }

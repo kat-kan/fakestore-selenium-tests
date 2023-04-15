@@ -152,7 +152,7 @@ public class CheckoutTests extends BaseTest {
 
             OrderDetailsPage orderDetailsPage = orderReceivedPage.header.viewMyAccount()
                     .viewOrders()
-                    .goToOrderDetails(orderId);
+                    .navigateToOrder(orderId);
 
             Assertions.assertAll(
                     () -> assertEquals(orderId, orderDetailsPage.getOrderId(),
