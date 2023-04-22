@@ -14,5 +14,5 @@ public class CartItemModel {
     private WebElement productLink;
     private String price;
     private String quantity;
-    private String totalPrice;
+    private String subtotalPrice;
 }
