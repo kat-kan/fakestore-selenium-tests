@@ -20,7 +20,7 @@ public class CartItemRow extends BasePage {
     @FindBy(css = "product-price")
     private WebElement priceColumn;
 
-    @FindBy(css = "product-quantity")
+    @FindBy(css = "[id^='quantity']")
     private WebElement quantityColumn;
 
     @FindBy(css = "product-subtotal")
@@ -36,8 +36,9 @@ public class CartItemRow extends BasePage {
                 .removeButton(removeButtonColumn)
                 .thumbnail(productThumbnailColumn)
                 .productLink(productLinkColumn)
+                .name(productLinkColumn.getText())
                 .price(priceColumn.getText())
-                .quantity(quantityColumn.getText())
+                .quantity(quantityColumn.getAttribute("value"))
                 .subtotalPrice(subtotalPriceColumn.getText())
                 .build();
     }

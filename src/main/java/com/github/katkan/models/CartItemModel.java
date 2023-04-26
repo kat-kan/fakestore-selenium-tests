@@ -12,6 +12,7 @@ public class CartItemModel {
     private WebElement removeButton;
     private WebElement thumbnail;
     private WebElement productLink;
+    private String name;
     private String price;
     private String quantity;
     private String subtotalPrice;
