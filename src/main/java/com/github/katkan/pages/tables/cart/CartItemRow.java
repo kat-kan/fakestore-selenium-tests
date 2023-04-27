@@ -8,22 +8,22 @@ import org.openqa.selenium.support.FindBy;
 
 public class CartItemRow extends BasePage {
 
-    @FindBy(css = ".product-remove")
+    @FindBy(css = ".product-remove>a")
     private WebElement removeButtonColumn;
 
-    @FindBy(css = "product-thumbnail")
+    @FindBy(css = ".product-thumbnail>a")
     private WebElement productThumbnailColumn;
 
-    @FindBy(css = "product-name")
+    @FindBy(css = ".product-name>a")
     private WebElement productLinkColumn;
 
-    @FindBy(css = "product-price")
+    @FindBy(css = ".product-price bdi")
     private WebElement priceColumn;
 
     @FindBy(css = "[id^='quantity']")
     private WebElement quantityColumn;
 
-    @FindBy(css = "product-subtotal")
+    @FindBy(css = ".product-subtotal bdi")
     private WebElement subtotalPriceColumn;
 
 
@@ -35,10 +35,10 @@ public class CartItemRow extends BasePage {
         return CartItemModel.builder()
                 .removeButton(removeButtonColumn)
                 .thumbnail(productThumbnailColumn)
-                .productLink(productLinkColumn)
+                .productLink(productLinkColumn.getAttribute("href"))
                 .name(productLinkColumn.getText())
                 .price(priceColumn.getText())
-                .quantity(quantityColumn.getAttribute("value"))
+                .quantity(Integer.parseInt(quantityColumn.getAttribute("value")))
                 .subtotalPrice(subtotalPriceColumn.getText())
                 .build();
     }

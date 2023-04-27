@@ -2,6 +2,7 @@ package com.github.katkan.pages.cart;
 
 import com.github.katkan.pages.checkout.CheckoutPage;
 import com.github.katkan.pages.main.BasePage;
+import com.github.katkan.pages.tables.cart.CartItemTable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -49,6 +50,10 @@ public class CartPage extends BasePage {
         super(driver);
         wait = new WebDriverWait(driver, 7);
         PageFactory.initElements(driver, this);
+    }
+
+    public CartItemTable getCartItemsTable(){
+        return new CartItemTable(driver);
     }
 
     public int getProductQuantity() {
