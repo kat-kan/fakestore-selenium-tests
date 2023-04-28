@@ -28,7 +28,7 @@ public class CartItemTable extends BasePage {
     private void initializeCartItems(){
         rows.stream()
                 .parallel()
-                .forEach(r-> cartItems.add(new CartItemRow(driver).toModel()));
+                .forEach(r-> cartItems.add(new CartItemRow(driver, r).toModel()));
     }
 
     public CartItemModel getCartItem(String name){

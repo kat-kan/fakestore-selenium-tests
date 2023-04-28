@@ -5,6 +5,8 @@ import com.github.katkan.pages.main.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.pagefactory.DefaultElementLocatorFactory;
 
 public class CartItemRow extends BasePage {
 
@@ -27,8 +29,9 @@ public class CartItemRow extends BasePage {
     private WebElement subtotalPriceColumn;
 
 
-    public CartItemRow(WebDriver driver) {
+    public CartItemRow(WebDriver driver, WebElement row) {
         super(driver);
+        PageFactory.initElements(new DefaultElementLocatorFactory(row), this);
     }
 
     public CartItemModel toModel() {
