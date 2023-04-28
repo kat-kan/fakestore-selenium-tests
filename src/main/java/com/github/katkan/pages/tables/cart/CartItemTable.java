@@ -9,6 +9,7 @@ import org.openqa.selenium.support.FindBy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class CartItemTable extends BasePage {
 
@@ -36,5 +37,14 @@ public class CartItemTable extends BasePage {
                 .filter(cartItem-> cartItem.getName().equals(name))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Product " + name + " not found"));
+    }
+
+    public List<String> getProductPagePartOfUrlsForAllCartItems(){
+        String productGenericUrlPart = "https://fakestore.testelka.pl/product/";
+        return cartItems.stream()
+                .map(CartItemModel::getProductLink)
+                .map(productLink -> productLink.replace(productGenericUrlPart, ""))
+                .sorted()
+                .collect(Collectors.toList());
     }
 }
