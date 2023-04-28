@@ -6,8 +6,6 @@ import com.github.katkan.pages.main.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.pagefactory.DefaultElementLocatorFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +23,12 @@ public class MyOrdersTable extends BasePage {
 
     public MyOrdersTable(WebDriver driver) {
         super(driver);
-        PageFactory.initElements(new DefaultElementLocatorFactory(ordersTableContainer), this);
+//        PageFactory.initElements(new DefaultElementLocatorFactory(ordersTableContainer), this);
         initializeAllOrders();
     }
 
     public OrderDetailsPage navigateToOrder(String id) {
-        getOrder(id).getOrderLink().click();
+        this.getOrder(id).getOrderLink().click();
         return new OrderDetailsPage(driver);
     }
 
