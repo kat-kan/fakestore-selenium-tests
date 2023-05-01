@@ -28,6 +28,7 @@ public class CartTests extends BaseTest {
         ProductPage productPage = new ProductPage(driver).goTo(productUrl);
         String productName = productPage.getProductName();
         productPage.footer.closeCookieConsentBar();
+
         CartItemModel productInCart = productPage.addToCart()
                 .viewCart()
                 .getCartItemsTable()
@@ -37,7 +38,7 @@ public class CartTests extends BaseTest {
                 () -> assertThat(productInCart.getQuantity())
                         .as("The quantity of product is not 1")
                         .isEqualTo(1),
-                ()-> assertThat(productInCart.getProductLink())
+                () -> assertThat(productInCart.getProductLink())
                         .as("The link in the cart is not the link to product's page")
                         .isEqualTo(productUrl)
         );
@@ -48,9 +49,9 @@ public class CartTests extends BaseTest {
     void addProductToCartFromCategoryPage() {
         String url = "https://fakestore.testelka.pl/product-category/yoga-i-pilates/";
         String productId = "61";
-
         CategoryPage categoryPage = new CategoryPage(driver).goTo(url);
         categoryPage.footer.closeCookieConsentBar();
+
         CartPage cartPage = categoryPage.addToCart(productId).viewCart();
 
         Assertions.assertAll(
@@ -72,7 +73,6 @@ public class CartTests extends BaseTest {
         for (int i = 0; i < 10; i++) {
             productPage.goTo(productUrl).addToCart();
         }
-
         CartPage cartPage = productPage.viewCart();
 
         Assertions.assertAll(
@@ -92,6 +92,7 @@ public class CartTests extends BaseTest {
         int numberOfItems = 9;
         ProductPage productPage = new ProductPage(driver).goTo(url);
         productPage.footer.closeCookieConsentBar();
+
         CartPage cartPage = productPage.addToCart(numberOfItems).viewCart();
 
         Assertions.assertAll(
@@ -109,30 +110,17 @@ public class CartTests extends BaseTest {
     void add10DifferentProductsToCart() {
         ProductPage productPage = new ProductPage(driver);
         String productGenericUrlPart = "https://fakestore.testelka.pl/product/";
+
         productPages.forEach(product -> productPage.goTo(productGenericUrlPart + product).addToCart());
         CartPage cartPage = productPage.header.viewCart();
-
-//        List<WebElement> allProductsLinks = cartPage.getAllProductsLinks();
-
-        List<String> dadada = cartPage.getCartItemsTable().getProductPagePartOfUrlsForAllCartItems();
-
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(productPages.size(), cartPage.getNumberOfProducts(),
-                        "The number of products is not " + productPages.size())
-//                () -> allProductsLinks.stream()
-//                        .map(productLinkElement -> productLinkElement.getAttribute("href"))
-//                        .map(productLink -> productLink.replace(productGenericUrlPart, ""))
-//                        .forEach(productLinkElement -> Assertions.assertTrue(productPages.contains(productLinkElement),
-//                                "List of products that were added does not contain " + productLinkElement))
-        );
-
+        List<String> cartItemsProductPages = cartPage.getCartItemsTable().getProductPagePartOfUrlsForAllCartItems();
         Collections.sort(productPages);
 
         Assertions.assertAll(
                 () -> assertThat(cartPage.getNumberOfProducts())
                         .as("The number of products is not " + productPages.size())
                         .isEqualTo(productPages.size()),
-                () -> assertThatList(dadada).isEqualTo(productPages)
+                () -> assertThatList(cartItemsProductPages).isEqualTo(productPages)
         );
     }
 
@@ -147,10 +135,12 @@ public class CartTests extends BaseTest {
         cartPage.changeQuantity(quantity);
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals(quantity, cartPage.getProductQuantity(),
-                        "The quantity of product is not " + quantity),
-                () -> Assertions.assertEquals(url, cartPage.getProductLink(),
-                        "The link in the cart is not the link for Island Peak trip")
+                () -> assertThat(cartPage.getProductQuantity())
+                        .as("The quantity of product is not " + quantity)
+                        .isEqualTo(quantity),
+                () -> assertThat(cartPage.getProductLink())
+                        .as("The link in the cart is not the correct link " + url)
+                        .isEqualTo(url)
         );
     }
 
@@ -161,9 +151,12 @@ public class CartTests extends BaseTest {
         ProductPage productPage = new ProductPage(driver);
         productPage.goTo(url).footer.closeCookieConsentBar();
         CartPage cartPage = productPage.addToCart().viewCart();
+
         cartPage.removeProduct();
 
-        Assertions.assertTrue(cartPage.isCartEmpty(),
-                "Empty cart message is not displayed");
+        assertThat(cartPage.isCartEmpty())
+                .as("Empty cart message is not displayed")
+                .isTrue();
     }
 }
+
