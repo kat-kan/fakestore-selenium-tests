@@ -29,7 +29,7 @@ public class CartPage extends BasePage {
     @FindBy(css = ".blockUI")
     private WebElement loadingWheel;
 
-    @FindBy(css = "update_cart")
+    @FindBy(css = "[name=update_cart]")
     private WebElement updateCartButton;
 
     @FindBy(css = ".remove")
