@@ -6,7 +6,7 @@ import java.util.Locale;
 
 public class DateHelper {
 
-    public static String getCurrentDateInSpecifiedFormat(){
+    public static String getCurrentDateInSpecifiedFormat() {
         SimpleDateFormat orderSummaryDateFormat = new SimpleDateFormat("d MMMM, yyyy", Locale.forLanguageTag("pl"));
         return orderSummaryDateFormat.format(new Date());
     }
