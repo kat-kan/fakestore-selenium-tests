@@ -4,7 +4,6 @@ import com.github.katkan.pages.main.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
 public class OrderDetailsPage extends BasePage {
 
@@ -16,14 +15,13 @@ public class OrderDetailsPage extends BasePage {
 
     public OrderDetailsPage(WebDriver driver) {
         super(driver);
-        PageFactory.initElements(driver, this);
     }
 
-    public String getOrderId() {
+    public String getId() {
         return orderId.getText();
     }
 
-    public String getOrderDate() {
+    public String getDate() {
         return orderDate.getText();
     }
 }
