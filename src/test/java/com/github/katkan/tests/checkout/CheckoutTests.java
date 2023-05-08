@@ -1,5 +1,7 @@
 package com.github.katkan.tests.checkout;
 
+import com.github.katkan.enums.PaymentMethod;
+import com.github.katkan.helpers.DateHelper;
 import com.github.katkan.pages.account.OrderDetailsPage;
 import com.github.katkan.pages.cart.CartPage;
 import com.github.katkan.pages.checkout.CheckoutPage;
@@ -9,11 +11,10 @@ import com.github.katkan.properties.Properties;
 import com.github.katkan.tests.base.BaseTest;
 import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 public class CheckoutTests extends BaseTest {
-
-    static final String PAYMENT_METHOD = "Karta debetowa/kredytowa (Stripe)";
 
     String productUrl = "https://fakestore.testelka.pl/product/fuerteventura-sotavento/";
     String firstName = "Joanna";
@@ -32,11 +33,8 @@ public class CheckoutTests extends BaseTest {
     @BeforeEach
     void prepareOrder() {
         ProductPage productPage = new ProductPage(driver);
-        productPage.goTo(productUrl)
-                .footer
-                .closeCookieConsentBar();
-        productPage.addToCart()
-                .viewCart();
+        productPage.goTo(productUrl).footer.closeCookieConsentBar();
+        productPage.addToCart().viewCart();
     }
 
     @Test
@@ -52,14 +50,18 @@ public class CheckoutTests extends BaseTest {
                 .fillCityField(city)
                 .fillEmailField(email)
                 .fillPhoneField(phone)
+                .cardPage
                 .fillCardNumberField(cardNumber)
+                .cardPage
                 .fillCardCvcField(cardCvc)
+                .cardPage
                 .fillCardExpiryDateField(cardExpiryDate)
                 .acceptTermsAndConditions()
                 .confirm();
 
-        assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
-                "Order confirmation is not displayed");
+        assertThatNoException()
+                .as("Order confirmation is not displayed")
+                .isThrownBy(orderReceivedPage::isOrderSuccessfullyFinished);
     }
 
     @Test
@@ -77,23 +79,28 @@ public class CheckoutTests extends BaseTest {
                 .fillCityField(city)
                 .fillEmailField(email)
                 .fillPhoneField(phone)
+                .cardPage
                 .fillCardNumberField(cardNumber)
+                .cardPage
                 .fillCardCvcField(cardCvc)
+                .cardPage
                 .fillCardExpiryDateField(cardExpiryDate)
                 .acceptTermsAndConditions()
                 .confirm();
 
         Assertions.assertAll(
-                () -> assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
-                        "Order confirmation is not displayed"),
-                () -> assertEquals(orderReceivedPage.getCurrentDateInSpecifiedFormat(), orderReceivedPage.getOrderDate(),
-                        "The date of the order is not correct or correctly formatted" + orderReceivedPage.getCurrentDateInSpecifiedFormat()),
-                () -> assertNotNull(orderReceivedPage.getOrderId(), "Order number was not generated"),
-                () -> assertEquals(totalPrice, orderReceivedPage.getOrderTotalPrice(),
-                        "Total price is different than given in the cart : " + totalPrice),
-                () -> assertEquals(PAYMENT_METHOD, orderReceivedPage.getPaymentMethod(),
-                        "Payment method is not correct, should be " + PAYMENT_METHOD)
-                //TODO think about product-quantity assertion
+                () -> assertThat(orderReceivedPage.getDate())
+                        .as("The date of the order is not correct or correctly formatted" + DateHelper.getCurrentDateInSpecifiedFormat())
+                        .isEqualTo(DateHelper.getCurrentDateInSpecifiedFormat()),
+                () -> assertThat(orderReceivedPage.getId())
+                        .as("Order number was not generated")
+                        .isNotNull(),
+                () -> assertThat(orderReceivedPage.getTotalPrice())
+                        .as("Total price is different than given in the cart : " + totalPrice)
+                        .isEqualTo(totalPrice),
+                () -> assertThat(orderReceivedPage.getPaymentMethod())
+                        .as("Payment method is not correct, should be " + PaymentMethod.CARD.getDescription())
+                        .isEqualTo(PaymentMethod.CARD.getDescription())
         );
     }
 
@@ -118,14 +125,18 @@ public class CheckoutTests extends BaseTest {
                     .fillEmailField(email)
                     .fillPhoneField(phone)
                     .createNewAccount(password)
+                    .cardPage
                     .fillCardNumberField(cardNumber)
+                    .cardPage
                     .fillCardCvcField(cardCvc)
+                    .cardPage
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
 
-            assertDoesNotThrow(orderReceivedPage::isOrderSuccessfullyFinished,
-                    "Order confirmation is not displayed");
+            assertThatNoException()
+                    .as("Order confirmation is not displayed")
+                    .isThrownBy(orderReceivedPage::isOrderSuccessfullyFinished);
         }
 
 
@@ -141,24 +152,29 @@ public class CheckoutTests extends BaseTest {
                     .fillEmailField(email)
                     .fillPhoneField(phone)
                     .createNewAccount(password)
+                    .cardPage
                     .fillCardNumberField(cardNumber)
+                    .cardPage
                     .fillCardCvcField(cardCvc)
+                    .cardPage
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
 
-            String orderId = orderReceivedPage.getOrderId();
-            String orderDate = orderReceivedPage.getOrderDate();
+            String orderId = orderReceivedPage.getId();
+            String orderDate = orderReceivedPage.getDate();
 
             OrderDetailsPage orderDetailsPage = orderReceivedPage.header.viewMyAccount()
                     .viewOrders()
                     .navigateToOrder(orderId);
 
             Assertions.assertAll(
-                    () -> assertEquals(orderId, orderDetailsPage.getOrderId(),
-                            "The id on order details page should be " + orderId),
-                    () -> assertEquals(orderDate, orderDetailsPage.getOrderDate(),
-                            "The order date on order details page should be " + orderDate)
+                    () -> assertThat(orderDetailsPage.getId())
+                            .as("The id on order details page should be " + orderId)
+                            .isEqualTo(orderId),
+                    () -> assertThat(orderDetailsPage.getDate())
+                            .as("The order date on order details page should be " + orderDate)
+                            .isEqualTo(orderDate)
             );
 
         }
@@ -187,13 +203,17 @@ public class CheckoutTests extends BaseTest {
                     .fillCityField(city)
                     .fillEmailField(email)
                     .fillPhoneField(phone)
+                    .cardPage
                     .fillCardNumberField(cardNumber)
+                    .cardPage
                     .fillCardCvcField(cardCvc)
+                    .cardPage
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
 
-            assertEquals("Imię płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
+            assertThat(checkoutPage.getErrorMessageText())
+                    .isEqualTo("Imię płatnika jest wymaganym polem.");
         }
 
         @Test
@@ -208,13 +228,17 @@ public class CheckoutTests extends BaseTest {
                     .fillCityField(city)
                     .fillEmailField(email)
                     .fillPhoneField(phone)
+                    .cardPage
                     .fillCardNumberField(cardNumber)
+                    .cardPage
                     .fillCardCvcField(cardCvc)
+                    .cardPage
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
 
-            assertEquals("Nazwisko płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
+            assertThat(checkoutPage.getErrorMessageText())
+                    .isEqualTo("Nazwisko płatnika jest wymaganym polem.");
         }
 
         @Test
@@ -229,13 +253,17 @@ public class CheckoutTests extends BaseTest {
                     .fillCityField(city)
                     .fillEmailField(email)
                     .fillPhoneField(phone)
+                    .cardPage
                     .fillCardNumberField(cardNumber)
+                    .cardPage
                     .fillCardCvcField(cardCvc)
+                    .cardPage
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
 
-            assertEquals("Ulica płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
+            assertThat(checkoutPage.getErrorMessageText())
+                    .isEqualTo("Ulica płatnika jest wymaganym polem.");
         }
 
         @Test
@@ -250,13 +278,17 @@ public class CheckoutTests extends BaseTest {
                     .fillCityField(city)
                     .fillEmailField(email)
                     .fillPhoneField(phone)
+                    .cardPage
                     .fillCardNumberField(cardNumber)
+                    .cardPage
                     .fillCardCvcField(cardCvc)
+                    .cardPage
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
 
-            assertEquals("Kod pocztowy płatnika nie jest prawidłowym kodem pocztowym.", checkoutPage.getErrorMessageText());
+            assertThat(checkoutPage.getErrorMessageText())
+                    .isEqualTo("Kod pocztowy płatnika nie jest prawidłowym kodem pocztowym.");
         }
 
         @Test
@@ -271,13 +303,17 @@ public class CheckoutTests extends BaseTest {
                     .fillCityField(city)
                     .fillEmailField(email)
                     .fillPhoneField(phone)
+                    .cardPage
                     .fillCardNumberField(cardNumber)
+                    .cardPage
                     .fillCardCvcField(cardCvc)
+                    .cardPage
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
 
-            assertEquals("Ulica płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
+            assertThat(checkoutPage.getErrorMessageText())
+                    .isEqualTo("Ulica płatnika jest wymaganym polem.");
         }
 
         @Test
@@ -292,13 +328,17 @@ public class CheckoutTests extends BaseTest {
                     .fillPostcodeField(postcode)
                     .fillCityField(city)
                     .fillPhoneField(phone)
+                    .cardPage
                     .fillCardNumberField(cardNumber)
+                    .cardPage
                     .fillCardCvcField(cardCvc)
+                    .cardPage
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
 
-            assertEquals("Adres email płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
+            assertThat(checkoutPage.getErrorMessageText())
+                    .isEqualTo("Adres email płatnika jest wymaganym polem.");
 
         }
 
@@ -314,13 +354,17 @@ public class CheckoutTests extends BaseTest {
                     .fillPostcodeField(postcode)
                     .fillCityField(city)
                     .fillEmailField(email)
+                    .cardPage
                     .fillCardNumberField(cardNumber)
+                    .cardPage
                     .fillCardCvcField(cardCvc)
+                    .cardPage
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
 
-            assertEquals("Telefon płatnika jest wymaganym polem.", checkoutPage.getErrorMessageText());
+            assertThat(checkoutPage.getErrorMessageText())
+                    .isEqualTo("Telefon płatnika jest wymaganym polem.");
         }
 
         @Test
@@ -337,13 +381,17 @@ public class CheckoutTests extends BaseTest {
                     .fillCityField(city)
                     .fillEmailField(email)
                     .fillPhoneField(phone)
+                    .cardPage
                     .fillCardNumberField(cardNumber)
+                    .cardPage
                     .fillCardCvcField(cardCvc)
+                    .cardPage
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
 
-            assertEquals("Kod pocztowy płatnika nie jest prawidłowym kodem pocztowym.", checkoutPage.getErrorMessageText());
+            assertThat(checkoutPage.getErrorMessageText())
+                    .isEqualTo("Kod pocztowy płatnika nie jest prawidłowym kodem pocztowym.");
         }
 
         @Test
@@ -360,13 +408,17 @@ public class CheckoutTests extends BaseTest {
                     .fillCityField(city)
                     .fillEmailField(email)
                     .fillPhoneField(incorrectPhone)
+                    .cardPage
                     .fillCardNumberField(cardNumber)
+                    .cardPage
                     .fillCardCvcField(cardCvc)
+                    .cardPage
                     .fillCardExpiryDateField(cardExpiryDate)
                     .acceptTermsAndConditions()
                     .confirm();
 
-            assertEquals("Telefon płatnika nie jest poprawnym numerem telefonu.", checkoutPage.getErrorMessageText());
+            assertThat(checkoutPage.getErrorMessageText())
+                    .isEqualTo("Telefon płatnika nie jest poprawnym numerem telefonu.");
         }
     }
 
