@@ -2,13 +2,11 @@ package com.github.katkan.pages.order;
 
 import com.github.katkan.pages.main.BasePage;
 import com.github.katkan.pages.main.HeaderPage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
 
 public class OrderReceivedPage extends BasePage {
 
@@ -16,13 +14,23 @@ public class OrderReceivedPage extends BasePage {
 
     private WebDriverWait wait;
 
-    private By orderReceivedMessageLocator = By.cssSelector(".woocommerce-thankyou-order-received");
-    private By orderIdLocator = By.cssSelector(".woocommerce-order .order strong");
-    private By orderDateLocator = By.cssSelector(".woocommerce-order .date strong");
-    private By orderTotalPriceLocator = By.cssSelector(".woocommerce-order .total strong");
-    private By orderPaymentMethodLocator = By.cssSelector(".woocommerce-order .method strong");
-    private By orderProductNamesLocator = By.cssSelector(".order_item a");
-    private By orderProductQuantitiesLocator = By.cssSelector(".order_item .product-quantity");
+    @FindBy(css = ".woocommerce-thankyou-order-received")
+    private WebElement successMessage;
+
+    @FindBy(css = ".woocommerce-order .order strong")
+    private WebElement id;
+
+    @FindBy(css = ".woocommerce-order .date strong")
+    private WebElement date;
+
+    @FindBy(css = ".woocommerce-order .total strong")
+    private WebElement totalPrice;
+
+    @FindBy(css = ".woocommerce-order .method strong")
+    private WebElement paymentMethod;
+
+    @FindBy(css = ".order_item a")
+    private WebElement productNames;
 
     public OrderReceivedPage(WebDriver driver) {
         super(driver);
@@ -31,28 +39,22 @@ public class OrderReceivedPage extends BasePage {
     }
 
     public WebElement isOrderSuccessfullyFinished() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(orderReceivedMessageLocator));
+        return wait.until(ExpectedConditions.visibilityOf(successMessage));
     }
 
-    public String getOrderId() {
-        return driver.findElement(orderIdLocator).getText();
+    public String getId() {
+        return id.getText();
     }
 
-    public String getOrderDate() {
-        return driver.findElement(orderDateLocator).getText();
+    public String getDate() {
+        return date.getText();
     }
 
-    public String getOrderTotalPrice() {
-        //TODO check encoding issue
-        return driver.findElement(orderTotalPriceLocator).getText();
+    public String getTotalPrice() {
+        return totalPrice.getText();
     }
 
     public String getPaymentMethod() {
-        return driver.findElement(orderPaymentMethodLocator).getText();
+        return paymentMethod.getText();
     }
-
-    public List<WebElement> getProductNames() {
-        return driver.findElements(orderProductNamesLocator);
-    }
-
 }
