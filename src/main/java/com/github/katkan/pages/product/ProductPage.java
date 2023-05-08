@@ -4,19 +4,26 @@ import com.github.katkan.pages.cart.CartPage;
 import com.github.katkan.pages.main.BasePage;
 import com.github.katkan.pages.main.FooterPage;
 import com.github.katkan.pages.main.HeaderPage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 public class ProductPage extends BasePage {
 
     public HeaderPage header;
     public FooterPage footer;
 
-    private By viewCartButtonLocator = By.cssSelector(".woocommerce-message .wc-forward");
-    private By addToCartButtonLocator = By.cssSelector(".single_add_to_cart_button");
-    private By quantityFieldLocator = By.cssSelector("[id^='quantity']");
+    @FindBy(css = ".woocommerce-message .wc-forward")
+    private WebElement viewCartButton;
 
+    @FindBy(css= ".single_add_to_cart_button")
+    private WebElement addToCartButton;
+
+    @FindBy(css = "[id^='quantity']")
+    private WebElement quantityField;
+
+    @FindBy(css = ".product_title")
+    private WebElement productName;
 
     public ProductPage(WebDriver driver) {
         super(driver);
@@ -30,23 +37,26 @@ public class ProductPage extends BasePage {
     }
 
     public ProductPage addToCart() {
-        driver.findElement(addToCartButtonLocator).click();
+        addToCartButton.click();
         return new ProductPage(driver);
     }
 
     public ProductPage addToCart(int amount) {
         changeQuantity(amount);
-        driver.findElement(addToCartButtonLocator).click();
+        addToCartButton.click();
         return new ProductPage(driver);
     }
 
     public CartPage viewCart() {
-        driver.findElement(viewCartButtonLocator).click();
+        viewCartButton.click();
         return new CartPage(driver);
     }
 
+    public String getProductName(){
+        return productName.getText();
+    }
+
     private void changeQuantity(int amount) {
-        WebElement quantityField = driver.findElement(quantityFieldLocator);
         quantityField.clear();
         quantityField.sendKeys(String.valueOf(amount));
     }
