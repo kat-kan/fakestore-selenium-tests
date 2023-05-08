@@ -5,16 +5,24 @@ import com.github.katkan.pages.main.BasePage;
 import com.github.katkan.pages.main.FooterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class CategoryPage extends BasePage {
 
     public FooterPage footer;
     private WebDriverWait wait;
 
-    private By viewCartButtonLocator = By.cssSelector(".added_to_cart");
-    private String addToCartButtonLocator = "[data-product_id='<product_id>']";
+    @FindBy(css = ".added_to_cart")
+    private WebElement viewCartButton;
+
+    @FindBy(css = "[data-product_id]")
+    private List<WebElement> categoryProducts;
 
     public CategoryPage(WebDriver driver) {
         super(driver);
@@ -28,17 +36,20 @@ public class CategoryPage extends BasePage {
     }
 
     public CategoryPage addToCart(String id) {
-        driver.findElement(getProductSelector(id)).click();
+        getProductById(id).click();
         return new CategoryPage(driver);
     }
 
     public CartPage viewCart() {
-        wait.until(ExpectedConditions.elementToBeClickable(viewCartButtonLocator));
-        driver.findElement(viewCartButtonLocator).click();
+        wait.until(ExpectedConditions.elementToBeClickable(viewCartButton));
+        viewCartButton.click();
         return new CartPage(driver);
     }
 
-    private By getProductSelector(String id) {
-        return By.cssSelector(addToCartButtonLocator.replace("<product_id>", id));
+    private WebElement getProductById(String id) {
+        return categoryProducts.stream()
+                .filter(e -> e.getAttribute("data-product_id").equals(id))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Product with id " + id + "not found"));
     }
 }

@@ -1,155 +1,158 @@
 package com.github.katkan.pages.checkout;
 
-import com.github.katkan.pages.order.OrderReceivedPage;
 import com.github.katkan.pages.main.BasePage;
-import org.openqa.selenium.By;
+import com.github.katkan.pages.order.OrderReceivedPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
+
 public class CheckoutPage extends BasePage {
+
+    public CardPage cardPage;
 
     private WebDriverWait wait;
 
-    private By firstNameFieldLocator = By.cssSelector("#billing_first_name");
-    private By lastNameFieldLocator = By.cssSelector("#billing_last_name");
-    private By countryFieldLocator = By.cssSelector("#billing_country");
-    private By addressFieldLocator = By.cssSelector("#billing_address_1");
-    private By postcodeFieldLocator = By.cssSelector("#billing_postcode");
-    private By cityFieldLocator = By.cssSelector("#billing_city");
-    private By phoneNumberFieldLocator = By.cssSelector("#billing_phone");
-    private By emailFieldLocator = By.cssSelector("#billing_email");
-    private By cardNumberLocator = By.cssSelector(".InputElement[name='cardnumber']");
-    private By cardExpiryDateLocator = By.cssSelector("[name='exp-date']");
-    private By cardCvcLocator = By.cssSelector("[name='cvc']");
-    private By termsCheckboxLocator = By.cssSelector("#terms");
-    private By placeOrderButtonLocator = By.cssSelector("#place_order");
-    private By showLoginButtonLocator = By.cssSelector(".showlogin");
-    private By loginFieldLocator = By.cssSelector("#username");
-    private By passwordFieldLocator = By.cssSelector("#password");
-    private By loginButtonLocator = By.cssSelector("[name='login']");
-    private By loadingWheelLocator = By.cssSelector(".blockUI");
-    private By stripeFrameLocator = By.cssSelector("#stripe-card-element iframe");
-    private By stripeCvcFrameLocator = By.cssSelector("#stripe-cvc-element iframe");
-    private By stripeExpiryDateFrameLocator = By.cssSelector("#stripe-exp-element iframe");
-    private By createAccountCheckboxLocator = By.cssSelector("#createaccount");
-    private By newAccountPasswordFieldLocator = By.cssSelector("#account_password");
-    private By errorMessageLocator = By.cssSelector(".woocommerce-error");
+    @FindBy(css = "#billing_first_name")
+    private WebElement firstNameField;
+
+    @FindBy(css = "#billing_last_name")
+    private WebElement lastNameField;
+
+    @FindBy(css = "#billing_country")
+    private WebElement countryField;
+
+    @FindBy(css = "#billing_address_1")
+    private WebElement addressField;
+
+    @FindBy(css = "#billing_postcode")
+    private WebElement postcodeField;
+
+    @FindBy(css = "#billing_city")
+    private WebElement cityField;
+
+    @FindBy(css = "#billing_phone")
+    private WebElement phoneNumberField;
+
+    @FindBy(css = "#billing_email")
+    private WebElement emailField;
+
+    @FindBy(css = "#terms")
+    private WebElement termsCheckbox;
+
+    @FindBy(css = "#place_order")
+    private WebElement placeOrderButton;
+
+    @FindBy(css = ".showlogin")
+    private WebElement showLoginButton;
+
+    @FindBy(css = "#username")
+    private WebElement loginField;
+
+    @FindBy(css = "#password")
+    private WebElement passwordField;
+
+    @FindBy(css = "[name='login']")
+    private WebElement loginButton;
+
+    @FindBy(css = ".blockUI")
+    private List<WebElement> loadingWheels;
+
+    @FindBy(css = "#createaccount")
+    private WebElement createAccountCheckbox;
+
+    @FindBy(css = "#account_password")
+    private WebElement newAccountPasswordField;
+
+    @FindBy(css = ".woocommerce-error")
+    private WebElement errorMessage;
 
     public CheckoutPage(WebDriver driver) {
         super(driver);
         wait = new WebDriverWait(driver, 10);
+        cardPage = new CardPage(driver);
     }
 
-    public CheckoutPage fillFirstNameField(String firstName){
-        wait.until(ExpectedConditions.presenceOfElementLocated(firstNameFieldLocator));
-        provideFieldInputOrKeepExistingOne(firstNameFieldLocator, firstName);
+    public CheckoutPage fillFirstNameField(String firstName) {
+        wait.until(ExpectedConditions.visibilityOf(firstNameField));
+        provideFieldInputOrKeepExistingOne(firstNameField, firstName);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage fillLastNameField(String lastName){
-        wait.until(ExpectedConditions.presenceOfElementLocated(lastNameFieldLocator));
-        provideFieldInputOrKeepExistingOne(lastNameFieldLocator, lastName);
+    public CheckoutPage fillLastNameField(String lastName) {
+        wait.until(ExpectedConditions.visibilityOf(lastNameField));
+        provideFieldInputOrKeepExistingOne(lastNameField, lastName);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage fillCountryField(String country){
-        WebElement selectElement = driver.findElement(countryFieldLocator);
-        Select select = new Select(selectElement);
+    public CheckoutPage fillCountryField(String country) {
+        Select select = new Select(countryField);
         select.selectByVisibleText(country);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage fillAddressField(String address){
-        provideFieldInputOrKeepExistingOne(addressFieldLocator, address);
+    public CheckoutPage fillAddressField(String address) {
+        provideFieldInputOrKeepExistingOne(addressField, address);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage fillPostcodeField(String postcode){
-        provideFieldInputOrKeepExistingOne(postcodeFieldLocator, postcode);
+    public CheckoutPage fillPostcodeField(String postcode) {
+        provideFieldInputOrKeepExistingOne(postcodeField, postcode);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage fillCityField(String city){
-        provideFieldInputOrKeepExistingOne(cityFieldLocator, city);
+    public CheckoutPage fillCityField(String city) {
+        provideFieldInputOrKeepExistingOne(cityField, city);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage fillEmailField(String email){
-        provideFieldInputOrKeepExistingOne(emailFieldLocator, email);
+    public CheckoutPage fillEmailField(String email) {
+        provideFieldInputOrKeepExistingOne(emailField, email);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage fillPhoneField(String phone){
-        provideFieldInputOrKeepExistingOne(phoneNumberFieldLocator, phone);
+    public CheckoutPage fillPhoneField(String phone) {
+        provideFieldInputOrKeepExistingOne(phoneNumberField, phone);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage fillCardNumberField(String cardNumber){
-        wait.until(ExpectedConditions.presenceOfElementLocated(stripeFrameLocator));
-        WebElement stripeFrameElement = driver.findElement(stripeFrameLocator);
-        driver.switchTo().frame(stripeFrameElement);
-        driver.findElement(cardNumberLocator).sendKeys(cardNumber);
-        driver.switchTo().parentFrame();
+    public CheckoutPage login(String login, String password) {
+        showLoginButton.click();
+        wait.until(ExpectedConditions.visibilityOf(loginField));
+        loginField.sendKeys(login);
+        passwordField.sendKeys(password);
+        loginButton.click();
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage fillCardExpiryDateField(String cardExpiryDate){
-        wait.until(ExpectedConditions.presenceOfElementLocated(stripeExpiryDateFrameLocator));
-        WebElement stripeFrameElement = driver.findElement(stripeExpiryDateFrameLocator);
-        driver.switchTo().frame(stripeFrameElement);
-        driver.findElement(cardExpiryDateLocator).sendKeys(cardExpiryDate);
-        driver.switchTo().parentFrame();
+    public CheckoutPage createNewAccount(String password) {
+        createAccountCheckbox.click();
+        wait.until(ExpectedConditions.visibilityOf(newAccountPasswordField));
+        newAccountPasswordField.sendKeys(password);
         return new CheckoutPage(driver);
     }
 
-    public CheckoutPage fillCardCvcField(String cardCvc){
-        wait.until(ExpectedConditions.presenceOfElementLocated(stripeCvcFrameLocator));
-        WebElement stripeFrameElement = driver.findElement(stripeCvcFrameLocator);
-        driver.switchTo().frame(stripeFrameElement);
-        driver.findElement(cardCvcLocator).sendKeys(cardCvc);
-        driver.switchTo().parentFrame();
-        return new CheckoutPage(driver);
-    }
-
-    public CheckoutPage login(String login, String password){
-        driver.findElement(showLoginButtonLocator).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(loginFieldLocator));
-        driver.findElement(loginFieldLocator).sendKeys(login);
-        driver.findElement(passwordFieldLocator).sendKeys(password);
-        driver.findElement(loginButtonLocator).click();
-        wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
-        //TODO add wait for non-visibility of login related fields
-        return new CheckoutPage(driver);
-    }
-
-    public CheckoutPage createNewAccount(String password){
-        driver.findElement(createAccountCheckboxLocator).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(newAccountPasswordFieldLocator));
-        driver.findElement(newAccountPasswordFieldLocator).sendKeys(password);
-        return new CheckoutPage(driver);
-    }
-
-    public CheckoutPage acceptTermsAndConditions(){
-        driver.findElement(termsCheckboxLocator).click();
+    public CheckoutPage acceptTermsAndConditions() {
+        termsCheckbox.click();
         return new CheckoutPage(driver);
     }
 
     public OrderReceivedPage confirm() {
-        driver.findElement(placeOrderButtonLocator).click();
-        wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
+        placeOrderButton.click();
+        wait.until(s -> loadingWheels.size() == 0);
         return new OrderReceivedPage(driver);
     }
 
-    public String getErrorMessageText(){
-        return driver.findElement(errorMessageLocator).getText();
+    public String getErrorMessageText() {
+        return errorMessage.getText();
     }
 
-    private void provideFieldInputOrKeepExistingOne(By fieldLocator, String input) {
-        WebElement inputField = driver.findElement(fieldLocator);
-        if (inputField.getAttribute("value").isBlank()){
+    private void provideFieldInputOrKeepExistingOne(WebElement inputField, String input) {
+        if (inputField.getAttribute("value").isBlank()) {
             inputField.sendKeys(input);
         }
     }

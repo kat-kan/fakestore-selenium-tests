@@ -2,9 +2,12 @@ package com.github.katkan.pages.cart;
 
 import com.github.katkan.pages.checkout.CheckoutPage;
 import com.github.katkan.pages.main.BasePage;
+import com.github.katkan.pages.tables.cart.CartItemTable;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -14,68 +17,90 @@ public class CartPage extends BasePage {
 
     private final WebDriverWait wait;
 
-    private String removeProductButtonCssSelector = "[data-product_id='<product_id>']";
-    private By productQuantityLocator = By.cssSelector("[id^='quantity']");
-    private By productLinkInCartLocator = By.cssSelector("td.product-name a");
-    private By cartItemLocator = By.cssSelector(".cart_item");
-    private By loadingWheelLocator = By.cssSelector(".blockUI");
-    private By updateCartButtonLocator = By.name("update_cart");
-    private By removeButtonLocator = By.cssSelector(".remove");
-    private By cartEmptyMessageLocator = By.cssSelector(".cart-empty");
-    private By checkoutButtonLocator = By.cssSelector(".checkout-button");
-    private By orderTotalPriceLocator = By.cssSelector(".order-total .amount bdi");
+    @FindBy(css = "td.product-name a")
+    private WebElement productLinkInCart;
 
+    @FindBy(css = "[id^='quantity']")
+    private WebElement productQuantity;
+
+    @FindBy(css = ".cart_item")
+    private List<WebElement> cartItems;
+
+    @FindBy(css = ".blockUI")
+    private WebElement loadingWheel;
+
+    @FindBy(css = "[name=update_cart]")
+    private WebElement updateCartButton;
+
+    @FindBy(css = ".remove")
+    private WebElement removeButton;
+
+    @FindBy(css = ".cart-empty")
+    private WebElement cartEmptyMessage;
+
+    @FindBy(css = ".checkout-button")
+    private WebElement checkoutButton;
+
+    @FindBy(css = ".order-total .amount bdi")
+    private WebElement orderTotalPrice;
+
+    private String removeProductButtonCssSelector = "[data-product_id='<product_id>']";
 
     public CartPage(WebDriver driver) {
         super(driver);
         wait = new WebDriverWait(driver, 7);
+        PageFactory.initElements(driver, this);
+    }
+
+    public CartItemTable getCartItemsTable(){
+        return new CartItemTable(driver);
     }
 
     public int getProductQuantity() {
-        return Integer.parseInt(driver.findElement(productQuantityLocator).getAttribute("value"));
+        return Integer.parseInt(productQuantity.getAttribute("value"));
     }
 
     public int getNumberOfProducts() {
-        return driver.findElements(cartItemLocator).size();
+        return cartItems.size();
     }
 
     public String getProductLink() {
-        return driver.findElement(productLinkInCartLocator).getAttribute("href");
+        return productLinkInCart.getAttribute("href");
     }
 
-    public List<WebElement> getAllProductsLinks() {
-        return driver.findElements(productLinkInCartLocator);
-    }
+    //TODO FIXME
+//    public List<WebElement> getAllProductsLinks() {
+//        return driver.findElements(productLinkInCartLocator);
+//    }
 
     public WebElement isProductDisplayed(String id) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(getProductSelector(id)));
     }
 
     public void changeQuantity(int quantity) {
-        WebElement quantityField = driver.findElement(productQuantityLocator);
-        quantityField.clear();
-        quantityField.sendKeys(String.valueOf(quantity));
-        driver.findElement(updateCartButtonLocator).click();
-        wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
+        productQuantity.clear();
+        productQuantity.sendKeys(String.valueOf(quantity));
+        updateCartButton.click();
+        wait.until(ExpectedConditions.invisibilityOf(loadingWheel));
     }
 
     public void removeProduct() {
-        driver.findElement(removeButtonLocator).click();
-        wait.until(ExpectedConditions.numberOfElementsToBe(loadingWheelLocator, 0));
+        removeButton.click();
+        wait.until(ExpectedConditions.invisibilityOf(loadingWheel));
     }
 
     public boolean isCartEmpty() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(cartEmptyMessageLocator));
-        return driver.findElement(cartEmptyMessageLocator).isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(cartEmptyMessage));
+        return cartEmptyMessage.isDisplayed();
     }
 
-    public CheckoutPage goToCheckout(){
-        driver.findElement(checkoutButtonLocator).click();
+    public CheckoutPage goToCheckout() {
+        checkoutButton.click();
         return new CheckoutPage(driver);
     }
 
-    public String getTotalPrice(){
-        return driver.findElement(orderTotalPriceLocator).getText();
+    public String getTotalPrice() {
+        return orderTotalPrice.getText();
     }
 
     private By getProductSelector(String id) {
