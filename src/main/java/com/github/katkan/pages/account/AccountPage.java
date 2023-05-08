@@ -28,7 +28,7 @@ public class AccountPage extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(deleteButton));
         deleteButton.click();
         driver.switchTo().alert().accept();
-        wait.until(ExpectedConditions.urlToBe(Properties.getUrl()));
+        wait.until(ExpectedConditions.urlToBe(Properties.getBaseUrl()));
     }
 
     public MyOrdersTable viewOrders() {
