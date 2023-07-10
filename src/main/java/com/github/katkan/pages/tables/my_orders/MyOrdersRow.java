@@ -25,7 +25,6 @@ public class MyOrdersRow extends BasePage {
 
     public MyOrdersRow(WebDriver driver, WebElement row) {
         super(driver);
-//        PageFactory.initElements(new DefaultElementLocatorFactory(rowContext), this);
     }
 
     public MyOrdersModel toModel() {

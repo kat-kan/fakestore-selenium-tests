@@ -23,7 +23,6 @@ public class MyOrdersTable extends BasePage {
 
     public MyOrdersTable(WebDriver driver) {
         super(driver);
-//        PageFactory.initElements(new DefaultElementLocatorFactory(ordersTableContainer), this);
         initializeAllOrders();
     }
 
