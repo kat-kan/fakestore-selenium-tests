@@ -11,6 +11,9 @@ import com.github.katkan.properties.Properties;
 import com.github.katkan.tests.base.BaseTest;
 import org.junit.jupiter.api.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
@@ -68,6 +71,7 @@ public class CheckoutTests extends BaseTest {
     @DisplayName("Login to existing account during order process. Create an order and check order summary correctness")
     void orderAfterLoggingInOnExistingAccount() {
         String totalPrice = new CartPage(driver).getTotalPrice();
+        SimpleDateFormat orderSummaryDateFormat = new SimpleDateFormat("d MMMM, yyyy", Locale.forLanguageTag("pl"));
         CheckoutPage checkoutPage = new CartPage(driver).goToCheckout();
 
         checkoutPage.login(Properties.getUsername(), Properties.getPassword());
@@ -90,8 +94,8 @@ public class CheckoutTests extends BaseTest {
 
         Assertions.assertAll(
                 () -> assertThat(orderReceivedPage.getDate())
-                        .as("The date of the order is not correct or correctly formatted" + DateHelper.getCurrentDateInSpecifiedFormat())
-                        .isEqualTo(DateHelper.getCurrentDateInSpecifiedFormat()),
+                        .as("The date of the order is not correct or correctly formatted" + DateHelper.getCurrentDateInSpecifiedFormat(orderSummaryDateFormat))
+                        .isEqualTo(DateHelper.getCurrentDateInSpecifiedFormat(orderSummaryDateFormat)),
                 () -> assertThat(orderReceivedPage.getId())
                         .as("Order number was not generated")
                         .isNotNull(),
