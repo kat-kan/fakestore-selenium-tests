@@ -16,7 +16,7 @@ public class ProductPage extends BasePage {
     @FindBy(css = ".woocommerce-message .wc-forward")
     private WebElement viewCartButton;
 
-    @FindBy(css= ".single_add_to_cart_button")
+    @FindBy(css = ".single_add_to_cart_button")
     private WebElement addToCartButton;
 
     @FindBy(css = "[id^='quantity']")
@@ -33,18 +33,18 @@ public class ProductPage extends BasePage {
 
     public ProductPage goTo(String productUrl) {
         driver.navigate().to(productUrl);
-        return new ProductPage(driver);
+        return this;
     }
 
     public ProductPage addToCart() {
         addToCartButton.click();
-        return new ProductPage(driver);
+        return this;
     }
 
     public ProductPage addToCart(int amount) {
         changeQuantity(amount);
         addToCartButton.click();
-        return new ProductPage(driver);
+        return this;
     }
 
     public CartPage viewCart() {
@@ -52,7 +52,7 @@ public class ProductPage extends BasePage {
         return new CartPage(driver);
     }
 
-    public String getProductName(){
+    public String getProductName() {
         return productName.getText();
     }
 

@@ -3,12 +3,10 @@ package com.github.katkan.pages.category;
 import com.github.katkan.pages.cart.CartPage;
 import com.github.katkan.pages.main.BasePage;
 import com.github.katkan.pages.main.FooterPage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -16,7 +14,6 @@ import java.util.NoSuchElementException;
 public class CategoryPage extends BasePage {
 
     public FooterPage footer;
-    private WebDriverWait wait;
 
     @FindBy(css = ".added_to_cart")
     private WebElement viewCartButton;
@@ -26,18 +23,17 @@ public class CategoryPage extends BasePage {
 
     public CategoryPage(WebDriver driver) {
         super(driver);
-        this.wait = new WebDriverWait(driver, 5);
         footer = new FooterPage(driver);
     }
 
     public CategoryPage goTo(String url) {
         driver.navigate().to(url);
-        return new CategoryPage(driver);
+        return this;
     }
 
     public CategoryPage addToCart(String id) {
         getProductById(id).click();
-        return new CategoryPage(driver);
+        return this;
     }
 
     public CartPage viewCart() {
