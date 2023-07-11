@@ -12,8 +12,6 @@ public class OrderReceivedPage extends BasePage {
 
     public HeaderPage header;
 
-    private WebDriverWait wait;
-
     @FindBy(css = ".woocommerce-thankyou-order-received")
     private WebElement successMessage;
 
@@ -35,7 +33,6 @@ public class OrderReceivedPage extends BasePage {
     public OrderReceivedPage(WebDriver driver) {
         super(driver);
         header = new HeaderPage(driver);
-        wait = new WebDriverWait(driver, 5);
     }
 
     public WebElement isOrderSuccessfullyFinished() {

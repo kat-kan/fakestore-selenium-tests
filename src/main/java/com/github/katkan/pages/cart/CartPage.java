@@ -7,15 +7,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
 public class CartPage extends BasePage {
-
-    private final WebDriverWait wait;
 
     @FindBy(css = "td.product-name a")
     private WebElement productLinkInCart;
@@ -48,11 +44,9 @@ public class CartPage extends BasePage {
 
     public CartPage(WebDriver driver) {
         super(driver);
-        wait = new WebDriverWait(driver, 7);
-        PageFactory.initElements(driver, this);
     }
 
-    public CartItemTable getCartItemsTable(){
+    public CartItemTable getCartItemsTable() {
         return new CartItemTable(driver);
     }
 
@@ -67,11 +61,6 @@ public class CartPage extends BasePage {
     public String getProductLink() {
         return productLinkInCart.getAttribute("href");
     }
-
-    //TODO FIXME
-//    public List<WebElement> getAllProductsLinks() {
-//        return driver.findElements(productLinkInCartLocator);
-//    }
 
     public WebElement isProductDisplayed(String id) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(getProductSelector(id)));

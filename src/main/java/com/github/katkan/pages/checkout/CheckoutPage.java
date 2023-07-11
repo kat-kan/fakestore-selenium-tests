@@ -15,8 +15,6 @@ public class CheckoutPage extends BasePage {
 
     public CardPage cardPage;
 
-    private WebDriverWait wait;
-
     @FindBy(css = "#billing_first_name")
     private WebElement firstNameField;
 
@@ -73,51 +71,50 @@ public class CheckoutPage extends BasePage {
 
     public CheckoutPage(WebDriver driver) {
         super(driver);
-        wait = new WebDriverWait(driver, 10);
         cardPage = new CardPage(driver);
     }
 
     public CheckoutPage fillFirstNameField(String firstName) {
         wait.until(ExpectedConditions.visibilityOf(firstNameField));
         provideFieldInputOrKeepExistingOne(firstNameField, firstName);
-        return new CheckoutPage(driver);
+        return this;
     }
 
     public CheckoutPage fillLastNameField(String lastName) {
         wait.until(ExpectedConditions.visibilityOf(lastNameField));
         provideFieldInputOrKeepExistingOne(lastNameField, lastName);
-        return new CheckoutPage(driver);
+        return this;
     }
 
     public CheckoutPage fillCountryField(String country) {
         Select select = new Select(countryField);
         select.selectByVisibleText(country);
-        return new CheckoutPage(driver);
+        return this;
     }
 
     public CheckoutPage fillAddressField(String address) {
         provideFieldInputOrKeepExistingOne(addressField, address);
-        return new CheckoutPage(driver);
+        return this;
     }
 
     public CheckoutPage fillPostcodeField(String postcode) {
         provideFieldInputOrKeepExistingOne(postcodeField, postcode);
-        return new CheckoutPage(driver);
+        return this;
     }
 
     public CheckoutPage fillCityField(String city) {
         provideFieldInputOrKeepExistingOne(cityField, city);
-        return new CheckoutPage(driver);
+        return this;
     }
 
     public CheckoutPage fillEmailField(String email) {
         provideFieldInputOrKeepExistingOne(emailField, email);
-        return new CheckoutPage(driver);
+        return this;
     }
 
     public CheckoutPage fillPhoneField(String phone) {
         provideFieldInputOrKeepExistingOne(phoneNumberField, phone);
-        return new CheckoutPage(driver);
+        return this;
     }
 
     public CheckoutPage login(String login, String password) {
@@ -126,19 +123,19 @@ public class CheckoutPage extends BasePage {
         loginField.sendKeys(login);
         passwordField.sendKeys(password);
         loginButton.click();
-        return new CheckoutPage(driver);
+        return this;
     }
 
     public CheckoutPage createNewAccount(String password) {
         createAccountCheckbox.click();
         wait.until(ExpectedConditions.visibilityOf(newAccountPasswordField));
         newAccountPasswordField.sendKeys(password);
-        return new CheckoutPage(driver);
+        return this;
     }
 
     public CheckoutPage acceptTermsAndConditions() {
         termsCheckbox.click();
-        return new CheckoutPage(driver);
+        return this;
     }
 
     public OrderReceivedPage confirm() {

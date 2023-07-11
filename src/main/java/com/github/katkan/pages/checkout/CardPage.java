@@ -9,8 +9,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class CardPage extends BasePage {
 
-    private WebDriverWait wait;
-
     @FindBy(css = "#stripe-card-element iframe")
     private WebElement stripeCardNumberFrame;
 
@@ -31,7 +29,6 @@ public class CardPage extends BasePage {
 
     public CardPage(WebDriver driver) {
         super(driver);
-        wait = new WebDriverWait(driver, 10);
     }
 
     public CheckoutPage fillCardNumberField(String cardNumber){
