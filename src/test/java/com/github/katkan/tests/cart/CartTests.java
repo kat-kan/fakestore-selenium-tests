@@ -5,7 +5,6 @@ import com.github.katkan.pages.cart.CartPage;
 import com.github.katkan.pages.category.CategoryPage;
 import com.github.katkan.pages.product.ProductPage;
 import com.github.katkan.tests.base.BaseTest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,13 +12,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CartTests extends BaseTest {
-
-    List<String> productPages = new ArrayList<>(List.of("wakacje-z-yoga-w-kraju-kwitnacej-wisni/", "egipt-el-gouna/", "fuerteventura-sotavento/",
-            "grecja-limnos/", "windsurfing-w-karpathos/", "windsurfing-w-lanzarote-costa-teguise/", "wyspy-zielonego-przyladka-sal/",
-            "gran-koscielcow/", "wspinaczka-island-peak/", "wspinaczka-via-ferraty/"));
 
     @Test
     @DisplayName("Check adding product to cart from the product page")
@@ -34,14 +29,12 @@ public class CartTests extends BaseTest {
                 .getCartItemsTable()
                 .getCartItem(productName);
 
-        Assertions.assertAll(
-                () -> assertThat(productInCart.getQuantity())
-                        .as("The quantity of product is not 1")
-                        .isEqualTo(1),
-                () -> assertThat(productInCart.getProductLink())
-                        .as("The link in the cart is not the link to product's page")
-                        .isEqualTo(productUrl)
-        );
+        softly.assertThat(productInCart.getQuantity())
+                .as("The quantity of product is not 1")
+                .isEqualTo(1);
+        softly.assertThat(productInCart.getProductLink())
+                .as("The link in the cart is not the link to product's page")
+                .isEqualTo(productUrl);
     }
 
     @Test
@@ -54,14 +47,14 @@ public class CartTests extends BaseTest {
 
         CartPage cartPage = categoryPage.addToCart(productId).viewCart();
 
-        Assertions.assertAll(
-                () -> assertThatNoException()
+        //TODO AssertJ SoftAssertions do not support this method. Need to think of custom implementation
+/*        softly.assertThatNoException()
                         .as("The product that was added is not displayed in the cart")
-                        .isThrownBy(() -> cartPage.isProductDisplayed(productId)),
-                () -> assertThat(cartPage.getProductQuantity())
-                        .as("The quantity of product is not 1")
-                        .isEqualTo(1)
-        );
+                        .isThrownBy(() -> cartPage.isProductDisplayed(productId));*/
+        softly.assertThat(cartPage.getProductQuantity())
+                .as("The quantity of product is not 1")
+                .isEqualTo(1);
+
     }
 
     @Test
@@ -75,14 +68,12 @@ public class CartTests extends BaseTest {
         }
         CartPage cartPage = productPage.viewCart();
 
-        Assertions.assertAll(
-                () -> assertThat(cartPage.getProductQuantity())
-                        .as("The quantity of product is not 10")
-                        .isEqualTo(10),
-                () -> assertThat(cartPage.getProductLink())
-                        .as("The link in the cart is not the link for Yoga in Japan trip")
-                        .isEqualTo(productUrl)
-        );
+        softly.assertThat(cartPage.getProductQuantity())
+                .as("The quantity of product is not 10")
+                .isEqualTo(10);
+        softly.assertThat(cartPage.getProductLink())
+                .as("The link in the cart is not the link for Yoga in Japan trip")
+                .isEqualTo(productUrl);
     }
 
     @Test
@@ -95,19 +86,21 @@ public class CartTests extends BaseTest {
 
         CartPage cartPage = productPage.addToCart(numberOfItems).viewCart();
 
-        Assertions.assertAll(
-                () -> assertThat(cartPage.getProductQuantity())
-                        .as("The quantity of product is not " + numberOfItems)
-                        .isEqualTo(numberOfItems),
-                () -> assertThat(cartPage.getProductLink())
-                        .as("The link in the cart is not the link for Fuerteventura trip")
-                        .isEqualTo(url)
-        );
+        softly.assertThat(cartPage.getProductQuantity())
+                .as("The quantity of product is not " + numberOfItems)
+                .isEqualTo(numberOfItems);
+        softly.assertThat(cartPage.getProductLink())
+                .as("The link in the cart is not the link for Fuerteventura trip")
+                .isEqualTo(url);
     }
 
     @Test
     @DisplayName("Check adding 10 different trips to cart")
     void add10DifferentProductsToCart() {
+        List<String> productPages = new ArrayList<>(List.of("wakacje-z-yoga-w-kraju-kwitnacej-wisni/", "egipt-el-gouna/", "fuerteventura-sotavento/",
+                "grecja-limnos/", "windsurfing-w-karpathos/", "windsurfing-w-lanzarote-costa-teguise/", "wyspy-zielonego-przyladka-sal/",
+                "gran-koscielcow/", "wspinaczka-island-peak/", "wspinaczka-via-ferraty/"));
+
         ProductPage productPage = new ProductPage(driver);
         String productGenericUrlPart = "https://fakestore.testelka.pl/product/";
 
@@ -116,12 +109,10 @@ public class CartTests extends BaseTest {
         List<String> cartItemsProductPages = cartPage.getCartItemsTable().getProductPagePartOfUrlsForAllCartItems();
         Collections.sort(productPages);
 
-        Assertions.assertAll(
-                () -> assertThat(cartPage.getNumberOfProducts())
-                        .as("The number of products is not " + productPages.size())
-                        .isEqualTo(productPages.size()),
-                () -> assertThatList(cartItemsProductPages).isEqualTo(productPages)
-        );
+        softly.assertThat(cartPage.getNumberOfProducts())
+                .as("The number of products is not " + productPages.size())
+                .isEqualTo(productPages.size());
+        softly.assertThatList(cartItemsProductPages).isEqualTo(productPages);
     }
 
     @Test
@@ -134,14 +125,12 @@ public class CartTests extends BaseTest {
         CartPage cartPage = productPage.addToCart().viewCart();
         cartPage.changeQuantity(quantity);
 
-        Assertions.assertAll(
-                () -> assertThat(cartPage.getProductQuantity())
-                        .as("The quantity of product is not " + quantity)
-                        .isEqualTo(quantity),
-                () -> assertThat(cartPage.getProductLink())
-                        .as("The link in the cart is not the correct link " + url)
-                        .isEqualTo(url)
-        );
+        softly.assertThat(cartPage.getProductQuantity())
+                .as("The quantity of product is not " + quantity)
+                .isEqualTo(quantity);
+        softly.assertThat(cartPage.getProductLink())
+                .as("The link in the cart is not the correct link " + url)
+                .isEqualTo(url);
     }
 
     @Test

@@ -92,20 +92,18 @@ public class CheckoutTests extends BaseTest {
                 .acceptTermsAndConditions()
                 .confirm();
 
-        Assertions.assertAll(
-                () -> assertThat(orderReceivedPage.getDate())
-                        .as("The date of the order is not correct or correctly formatted" + DateHelper.getCurrentDateInSpecifiedFormat(orderSummaryDateFormat))
-                        .isEqualTo(DateHelper.getCurrentDateInSpecifiedFormat(orderSummaryDateFormat)),
-                () -> assertThat(orderReceivedPage.getId())
-                        .as("Order number was not generated")
-                        .isNotNull(),
-                () -> assertThat(orderReceivedPage.getTotalPrice())
-                        .as("Total price is different than given in the cart : " + totalPrice)
-                        .isEqualTo(totalPrice),
-                () -> assertThat(orderReceivedPage.getPaymentMethod())
-                        .as("Payment method is not correct, should be " + PaymentMethod.CARD.getDescription())
-                        .isEqualTo(PaymentMethod.CARD.getDescription())
-        );
+        softly.assertThat(orderReceivedPage.getDate())
+                .as("The date of the order is not correct or correctly formatted" + DateHelper.getCurrentDateInSpecifiedFormat(orderSummaryDateFormat))
+                .isEqualTo(DateHelper.getCurrentDateInSpecifiedFormat(orderSummaryDateFormat));
+        softly.assertThat(orderReceivedPage.getId())
+                .as("Order number was not generated")
+                .isNotNull();
+        softly.assertThat(orderReceivedPage.getTotalPrice())
+                .as("Total price is different than given in the cart : " + totalPrice)
+                .isEqualTo(totalPrice);
+        softly.assertThat(orderReceivedPage.getPaymentMethod())
+                .as("Payment method is not correct, should be " + PaymentMethod.CARD.getDescription())
+                .isEqualTo(PaymentMethod.CARD.getDescription());
     }
 
     @Nested
@@ -172,15 +170,12 @@ public class CheckoutTests extends BaseTest {
                     .viewOrders()
                     .navigateToOrder(orderId);
 
-            Assertions.assertAll(
-                    () -> assertThat(orderDetailsPage.getId())
-                            .as("The id on order details page should be " + orderId)
-                            .isEqualTo(orderId),
-                    () -> assertThat(orderDetailsPage.getDate())
-                            .as("The order date on order details page should be " + orderDate)
-                            .isEqualTo(orderDate)
-            );
-
+            softly.assertThat(orderDetailsPage.getId())
+                    .as("The id on order details page should be " + orderId)
+                    .isEqualTo(orderId);
+            softly.assertThat(orderDetailsPage.getDate())
+                    .as("The order date on order details page should be " + orderDate)
+                    .isEqualTo(orderDate);
         }
 
         @AfterEach
