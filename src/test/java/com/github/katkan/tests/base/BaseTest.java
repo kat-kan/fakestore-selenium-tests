@@ -30,7 +30,6 @@ public class BaseTest {
         options.setExperimentalOption("prefs", prefs);
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver1.exe");
         driver = WebDriverManager.chromedriver().capabilities(options).create();
-        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
 
