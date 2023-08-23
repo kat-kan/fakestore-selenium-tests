@@ -8,7 +8,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.HashMap;
@@ -28,7 +27,6 @@ public class BaseTest {
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("autofill.profile_enabled", false);
         options.setExperimentalOption("prefs", prefs);
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver1.exe");
         driver = WebDriverManager.chromedriver().capabilities(options).create();
         driver.manage().window().maximize();
     }
